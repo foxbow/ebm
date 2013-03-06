@@ -1,0 +1,73 @@
+/* Generic settings */
+body { background-color:#fdb975;
+				  color:#543200; }
+
+/* Basic settings for each form */				  
+form { margin:0; }
+
+/* For links */
+ a { color:#543200; }
+   a:link {    text-decoration:none; }
+   a:visited { text-decoration:none }
+   a:hover {       font-weight:bold; }
+   a:active {       font-style:italic; }
+
+table.links { background-color:#db97531; }
+
+/* The header with login, logout and stuff */
+table.header { background-color:#b97531; }
+
+td.header { 
+	background-color:#b97531; 
+	font-weight:bold;
+	font-style:italic;
+	text-align:center; 
+	padding:0px; 
+	margin:0px; 
+	border-style:solid; 
+	border-color:#db9753; 
+	border-width:2px; 
+}
+
+/* The categories */
+table.catlist { background-color:#fdb9753; }
+
+td.catlist { 
+	background-color:#db9753; 
+    text-align:center; 
+    font-weight:bold;
+	padding:0px; 
+	margin:0px; 
+	border-style:solid; 
+	border-color:#b97531;
+	border-width:2px; 
+}
+
+/* The links */
+td.oddrow { 
+	background-color:#db9753; 
+    text-align:left;
+	padding:1px; 
+	margin:1px;
+    border-style:solid;
+    border-color:#b97531;
+    border-width:1px 
+}
+
+td.everow { 
+	background-color:#b97531; 
+    text-align:left;
+	padding:1px; 
+	margin:1px;
+    border-style:solid;
+    border-color:#db9753;
+    border-width:1px; 
+}
+
+/* The table for new links */
+table.newlink { 
+	background-color:#db9753; 
+    text-align:center; 
+	padding:1px; 
+	margin:2px; 
+}

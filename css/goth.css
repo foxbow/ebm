@@ -1,0 +1,56 @@
+/* Generic settings */
+body { background-color:#222222;
+       color:#bebebe; 
+		 font-family:Monotype Corsiva; }
+
+/* For links */
+a { color:#cccccc; }
+   a:link { text-decoration:none; }
+   a:visited { text-decoration:none }
+   a:hover { font-weight:bold;
+	          font-style:italic; }
+   a:active { font-style:italic; }
+
+*.newlink { background-color:#662200; 
+           text-align:center; 
+			  padding:1px; 
+			  margin:2px; }
+
+table.links { background-color:#666666; }
+
+td.oddrow { background-color:#662222; 
+          text-align:center;
+			 padding:0px; 
+			 margin:0px; }
+
+td.everow { background-color:#222266; 
+          text-align:center;
+			 padding:0px; 
+			 margin:0px; }
+
+table.catlist { background-color:#446644; }
+
+td.catlist { background-color:#446644; 
+           text-align:center; 
+           font-weight:bold;
+			  padding:0px; 
+			  margin:0px; 
+			  border-style:solid; 
+			  border-color:#efefef; 
+			  border-width:2px; }
+			  
+table.header { background-color:#444444; }
+
+td.header { background-color:#662244 ; 
+          font-weight:bold;
+			 font-style:italic;
+		    text-align:center; 
+		    padding:0px; 
+		    margin:0px; 
+		    border-style:solid; 
+		    border-color:#efefef; 
+		    border-width:2px; }
+
+table.newlink { background-color:#226644; }
+
+form { margin:0; }

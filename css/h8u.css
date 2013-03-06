@@ -1,0 +1,104 @@
+body { 
+  background-color:black; 
+  color:#dca;
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: small;
+}
+
+address {
+  font-size: small;
+}
+
+a, a:visited {
+  font-size: small;
+  color: #fdb;
+  text-decoration: none;
+  padding: 0 1px 0 1px;
+  display: block;
+}
+
+a:hover {
+  background-color: #888;
+  color: #fdb;
+  display: block
+}
+
+a.flow {
+  display: inline;
+}
+
+*.newlink { 
+  background-color:#ddd; 
+  text-align:center;
+  padding:1px; 
+  margin:2px; 
+}
+
+table { 
+  font-size: small;
+}
+
+table.links { 
+  background-color:black; 
+}
+
+td.oddrow { 
+  background-color:#444; 
+  text-align:left;
+  padding:1px; 
+  margin:1px; 
+}
+
+td.everow { 
+  background-color:#666; 
+  text-align:left;
+  padding:1px; 
+  margin:1px; 
+}
+
+table.catlist { 
+  background-color:black; 
+}
+
+td.catlist { 
+  background-color:#222; 
+  text-align:center; 
+  padding:0px; 
+  margin:0px; 
+  border-style:solid; 
+  border-color:#444; 
+  border-width:2px; 
+}
+			  
+table.header { 
+  background-color:black; 
+}
+
+td.header { 
+  background-color:#444; 
+  font-weight:bold;
+  font-style:italic;
+  text-align:center; 
+  padding:0px; 
+  margin:0px; 
+  border-style:solid; 
+  border-color:#222; 
+  border-width:2px; 
+}
+
+table.newlink { 
+  font-size: small;
+  background-color:#666; 
+}
+
+form { 
+  margin:0; 
+}
+
+input, select, textarea {
+  font-size: small;
+  background-color:#222;
+  border-color: #444;
+  color:#fdb;
+}
+

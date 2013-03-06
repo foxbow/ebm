@@ -1,0 +1,54 @@
+/* Generic settings */
+body { background-color:#dedede }
+
+/* For links */
+/* a { color:#101010; }
+   a:link { text-decoration:none; }
+   a:visited { text-decoration:none }
+   a:hover { font-weight:bold; }
+   a:active { font-style:italic; }
+*/
+
+*.newlink { background-color:#cc8888; 
+           text-align:center; 
+			  padding:1px; 
+			  margin:2px; }
+
+table.links { background-color:#4422aa; }
+
+td.oddrow { background-color:#efefef; 
+          text-align:left;
+			 padding:1px; 
+			 margin:1px; }
+
+td.everow { background-color:#ddffdd; 
+          text-align:left;
+			 padding:1px; 
+			 margin:1px; }
+
+table.catlist { background-color:#4422aa; }
+
+td.catlist { background-color:#cccccc; 
+           text-align:center; 
+           font-weight:bold;
+			  padding:0px; 
+			  margin:0px; 
+			  border-style:solid; 
+			  border-color:#efefef; 
+			  border-width:2px; }
+			  
+table.header { background-color:#aa2244; }
+
+td.header { background-color:#cccccc ; 
+          font-weight:bold;
+			 font-style:italic;
+		    text-align:center; 
+		    padding:0px; 
+		    margin:0px; 
+		    border-style:solid; 
+		    border-color:#efefef; 
+		    border-width:2px; }
+
+table.newlink { background-color:#ddffdd; }
+
+form { margin:0; }
