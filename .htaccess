@@ -1,0 +1,9 @@
+#######################################################################
+#     Diese .htaccess wurde vom STRATO-Webservermanager erstellt      #
+#######################################################################
+Options -Indexes
+AddType application/x-httpd-php5 .php5 .php
+AddType application/x-httpd-php4  .php4
+AddType text/css .css
+Options All +FollowSymlinks
+DirectoryIndex index.php index.html index.htm 

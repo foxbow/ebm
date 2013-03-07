@@ -1,0 +1,138 @@
+<html>
+<head>
+<title>
+  EasyBookMarks Documentation
+</title>
+</head>
+<body>
+<h1>EasyBookMarks Documentation</h1>
+<p>EasyBookMarks <i>ebm</i> is a little PHP scriptset that allows
+you to collect and maintain Weblinks on a webpage. The main goal
+was to have a list of bookmarks that were not attached to the
+browser that's being used but were accessible anywhere, especially
+after a fresh install.</p>
+
+<p>Over the time a couple of features and changes made the simple
+page what it has become now.</p>
+
+<h2>Features</h2>
+
+
+<h2>Installation</h2>
+<h3>Installing the package</h3>
+<p>Just unpack the archive somewhere in the subtree that can be
+accessed by the webserver.</p>
+
+<p><b>tar -zxpf ebm-<i>version</i>.tar.gz</b></p>
+
+<p>Additionally you may need to set the user and group accordingly
+so the webserver may access the files.</p>
+
+<p>After this you need to create a <b>settings.php</b> file, just
+copy the supplied <b>settings.ini</b> and edit it accordingly.
+This file just contains the description of the database access 
+and will not be overwritten upon updating.</p>
+
+<h3>Maintenance</h3>
+<p>After installing and opening the index page for the first time
+you will get an error message complaining that a table could
+not be read out. This message triggers the creation of the
+needed tables and will not appear again.</p>
+
+<p>With setting up the basic tables, the admin user called 
+<b>ebm</b> will be created. You should now press the <i>Login</i>
+link and log in as <b>ebm</b> with the password <b>ebm</b>.
+After that the <i>Login</i> links will be replaced with an
+<i>Admin</i> links. Following this you'll be transported to
+the settings page where you can customize the features, create
+new users, delete users and change passwords. You should first
+change the password for <b>ebm</b>.</p>
+
+<h3>The Admin Page</h3>
+<p>Once you log in as user <b>ebm</b> you have access to the 
+<i>Admin</i> page where you find the following options.</p>
+<ul>
+<li><b>Title</b>
+<br>This is the text that will be set as <i>&lt;title&gt;</i>
+    tag for the page. It will also be the headline.
+<li><b>Default category</b>
+<br>The category that will be opened as default. If that
+    category does not exist, no category will be opened.
+<li><b>Add/edit without login</b>
+<br>Allows anyone who visits the site to add and edit
+    bookmarks on the page.
+<li><b>Shortcut button</b>
+<br>Shows a button labelled <b>P</b> after each entry which
+    allows the logged in user to copy that link into his
+    personal default category.
+<li><b>Kill button</b>
+<br>Shows a button after each entry which allows to delete
+    the entry without needing to open the edit view.
+<li><b>New window button</b>
+<br>Shows a button that will open the link in a new browser
+    window. In fact it uses the <i>target="_blank"</i> value.
+<li><b>Contact address</b>
+<br>The email address that will be shown in the footer. If
+    this is left empty a default will be set.
+<li><b>Force login</b>
+<br>With this flag set, every user has to log in before seeing
+    any page, even the public bookmarks.
+<li><b>Show searchfields</b>
+<br>The searchfields are two textfields, one serving as a
+    shortcut to 
+    <a href="http://dict.leo.org"><i>dict.leo.org</i></a>,
+    a great online german/english translator and another
+    shortcut to
+    <a href="http://www.google.de"><i>google.de</i></a>.
+</ul>
+
+<h3>Update the package</h3>
+<p>Just unpack the package over the old installation. If you did
+not do any modifications beyond editing <b>settings.php</b>
+you're done after resetting the user and group attributes.</p>
+
+<h2>Usage</h2>
+<h2>Frequently Asked Questions</h2>
+<ul>
+  <li>What about subcategories?
+  <br>The current data model does not offer the background
+    for subcategories. If Version 2 ever makes it into the 
+    light it will have subcategories.
+  <li>Will you support <i>database</i>?
+  <br>Only if I get to play with it, else feel free to write
+    your own interface. Look at the <b>db</b> directory to
+    find a sceleton and the provided interfaces. It shouldn't
+    be hard to create an own with that help.
+  <li>The created HTML is not W3 conform!
+  <br>Right, it isn't. Mainly because Microsoft's Internet
+    Explorer can't handle proper HTML *D'Oh!* Nested forms
+    and tables will look awful when programmed after the
+    definitions.
+  <li>Why do I need cookies?
+  <br>The main reason is, that 
+    <i><a href="http://">Dillo</a></i> 
+    still does not know how to handle AUTH requests. Furthermore
+    it's more handy to stay logged in for a month. If enough
+    people bug me 'll add a switch that allows to change the 
+    behaviour back to Apache's .htaccess style authentication.
+</ul>
+<HR>
+<TABLE width=\"100%\">
+  <TR><TD>
+    <TABLE>
+      <TR><TD>
+	<address>
+	   EasyBookMarks (w) 2002/2003 by Bj&ouml;rn '
+	   <a href="mail:foxbow@web.de">foxbow</a>' Weber.
+	 </address>
+      </TD></TR>
+      <TR><TD>
+        <FONT size=-2>EBM version <a href="history.php">history</a></FONT>
+      </TD></TR>
+    </TABLE>
+  </TD>
+  <TD align="right"><IMG src="foxicon.gif" alt="fox"></TD>
+  </TR>
+</TABLE>
+</BODY>
+</HTML>
