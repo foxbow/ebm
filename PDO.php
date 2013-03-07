@@ -1,17 +1,21 @@
 <?PHP
+require_once( "settings.php" );
 
-$ebm_database="SQLite";
+$ebm_database="$ebm_prefix";
 
 // Initialize the basics and create the 'root' user called 'ebm'
 // with password 'ebm'
 function db_initDB(){
+    echo "<h1>Could not open db?!</h1>";
+return;
     $cid = db_openDB();
-    $res = sqlite_query( "CREATE TABLE users ( name VARCHAR(16) UNIQUE, password CHAR(32) );", $cid );
-    $res = sqlite_query( "INSERT INTO users VALUES ( 'ebm', '3dc70661cd5ea000608c27661b5c240b' );", $cid );
-    $res = sqlite_query( "CREATE TABLE cats ( name VARCHAR(16), cat VARCHAR(32), cid INTEGER );", $cid );
-    $res = sqlite_query( "CREATE TABLE links ( cid INTEGER, link VARCHAR(256), text VARCHAR(128) );", $cid );
-    $res = sqlite_query( "CREATE TABLE settings ( name VARCHAR(16), value VARCHAR(32), uname VARCHAR(16), PRIMARY KEY (name, uname) );", $cid );
-    sqlite_close( $cid );
+	$cid->beginTransaction();
+    $res = $cid->exec( "CREATE TABLE users ( name VARCHAR(16) UNIQUE, password CHAR(32) );" );
+    $res = $cid->exec( "INSERT INTO users VALUES ( 'ebm', '3dc70661cd5ea000608c27661b5c240b' );" );
+    $res = $cid->exec( "CREATE TABLE cats ( name VARCHAR(16), cat VARCHAR(32), cid INTEGER );" );
+    $res = $cid->exec( "CREATE TABLE links ( cid INTEGER, link VARCHAR(256), text VARCHAR(128) );" );
+    $res = $cid->exec( "CREATE TABLE settings ( name VARCHAR(16), value VARCHAR(32), uname VARCHAR(16), PRIMARY KEY (name, uname) );" );
+    $cid->commit();
 }
 
 /**
@@ -20,16 +24,16 @@ function db_initDB(){
  * user/admin to do that.
  **/
 function db_openDB(){
-    global $ebm_prefix;
-    $cid = sqlite_open("$ebm_prefix/ebm.db", 0666, $e);
-    if(!$cid) nodb();
+    global $ebm_prefix, $cid;
+	if( ! isset( $cid ) )
+	    $cid = new PDO( $ebm_prefix );
+    if($cid === false) nodb();
     return $cid;
 }
 
 function db_cleanup(){
     $cid = db_openDB();
-    $res = sqlite_query( "VACUUM;", $cid );
-    sqlite_close( $cid );
+    $res = $cid->exec( "VACUUM;" );
 }
 
 /**
@@ -37,22 +41,22 @@ function db_cleanup(){
  **/
 function db_getSetting( $name, $def, $uname ){
     $cid = db_openDB();
-    $res = sqlite_query( "SELECT value FROM settings WHERE name='$name' AND uname='ebm';", $cid );
-    if(!$res){
-        sqlite_close( $cid );
+//    $res = $cid->prepare( "SELECT value FROM settings WHERE name='$name' AND uname='ebm';" );
+    $res = $cid->prepare( "SELECT value FROM settings WHERE name=? AND uname=?;" );
+    if( $res === false){
         db_initDB();
         return db_getSetting( $name, $def, $uname );
     }
-    if( sqlite_num_rows( $res ) > 0 ){
-        $ret = sqlite_fetch_array( $res );
-        $def = db_decode($ret[0]);
-    }
-    $res = sqlite_query( "SELECT value FROM settings WHERE name='$name' AND uname='$uname';", $cid );
-    if( sqlite_num_rows( $res ) > 0 ){
-        $ret = sqlite_fetch_array( $res );
-        $def = db_decode($ret[0]);
-    }
-    sqlite_close( $cid );
+	$res->execute( array( $name, 'ebm' ) );
+    $ret = $res->fetchAll();
+	 if( !empty( $ret ) )
+	    $def = db_decode($ret[0]['value']);
+
+    $res->execute( array( $name, $uname ) );
+    $ret = $res->fetchAll();
+    if( !empty( $ret ) )
+        $def = db_decode($ret[0]['value']);
+
     return $def;
 }
 
@@ -74,11 +78,10 @@ function db_setSetting( $name, $value, $uname ){
  **/
 function db_getPassword( $name ){
     $cid = db_openDB();
-    $res = sqlite_query( "SELECT password FROM users WHERE name='$name';", $cid );
-    if( sqlite_num_rows( $res ) < 1 ) return "";
-    $ret = sqlite_fetch_array( $res );
-    sqlite_close( $cid );
-    return $ret[0];
+    $res = $cid->query( "SELECT password FROM users WHERE name='$name';" );
+	 $ret = $res->fetchAll();
+    if( empty( $ret ) ) return "";
+    return $ret['0']['password'];
 }
 
 function db_addUser( $name, $pass ){
@@ -107,13 +110,13 @@ function db_deleteUser( $user ){
     $rows = sqlite_num_rows( $res );
     $cats = array();
     for( $i=0; $i < $rows; $i++ ){
-	$val = sqlite_fetch_array( $res );
-	$cats[ $i ] = $val[0];
+		$val = sqlite_fetch_array( $res );
+		$cats[ $i ] = $val[0];
     }
     foreach( $cats as $cat ){
-	$catid = db_getCatID( $cat, $cid );
-	$res = sqlite_query( "DELETE FROM links WHERE ( cid='$catid' );", $cid );
-	$res = sqlite_query( "DELETE FROM cats WHERE ( name='$user' AND cat='$cat' );", $cid );
+		$catid = db_getCatID( $cat, $cid );
+		$res = sqlite_query( "DELETE FROM links WHERE ( cid='$catid' );", $cid );
+		$res = sqlite_query( "DELETE FROM cats WHERE ( name='$user' AND cat='$cat' );", $cid );
     }
 
     $res = sqlite_query( "DELETE FROM users WHERE name='$user';", $cid );
@@ -146,16 +149,13 @@ function db_getCategories(){
 
     $cid = db_openDB();
     // Get the categories
-    $res = sqlite_query( "SELECT cat FROM cats WHERE name='$ebm_user';", $cid );
-    $rows = sqlite_num_rows( $res );
+    $res = $cid->query( "SELECT cat FROM cats WHERE name='$ebm_user';" );
     $category = array();
-    // $val = sqlite_fetch_array( $res );
-    for( $i=0; $i < $rows; $i++ ){
-	$val = sqlite_fetch_array( $res );
-	$category[ $i ] = db_decode( $val[0] );
-    }
-
-    sqlite_close( $cid );
+    $i = 0;
+    foreach( $res->fetchAll() as $row ) {
+		$category[ $i ] = db_decode($row['cat']);
+      $i++;
+	 }
 
     // Return them
     return $category;
@@ -197,16 +197,19 @@ function db_renCat( $cat, $ncat ){
     sqlite_close( $cid );
 }
 
-// $cat MUST be encoded!
+/*
+ * should be done with a JOIN instead..
+ */
 function db_getCatID( $cat, $cid ){
     global $ebm_user;
-    $res = sqlite_query( "SELECT cid FROM cats WHERE ( name='$ebm_user' AND cat='$cat' );", $cid );
-    if(!$res) {
-	echo "SELECT cid FROM cats WHERE ( name='$ebm_user' AND cat='$cat' );<br>";
-	return -1;
+	$res = $cid->prepare( "SELECT cid FROM cats WHERE ( name=? AND cat=? );" );
+	if( false === $res->execute( array( $ebm_user, $cat ) ) ) {
+      	print_r( $cid->errorInfo() );
+		echo "db_getCatID: SELECT cid FROM cats WHERE ( name='$ebm_user' AND cat=$cat );<br>";
+		return -1;
     }
-    $catid = sqlite_fetch_array( $res );
-    return $catid[0];
+    $catid = $res->fetchAll();
+    return $catid[0]['cid'];
 }
 
 /*
@@ -215,18 +218,18 @@ function db_getCatID( $cat, $cid ){
  */
 function db_getEntries( $cat ){
     $cid = db_openDB();
-    $cat = db_encode( $cat );
     $catid = db_getCatID( $cat, $cid );
     $entries=array();
     if(empty($catid)) return $entries;
-    $res = sqlite_query( "SELECT text, link FROM links WHERE cid=$catid ORDER BY text;", $cid );
-    for( $rowid=0; $rowid < sqlite_num_rows( $res ); $rowid++ ){
-        $row=sqlite_fetch_array( $res );
-        $desc=db_decode( $row[0] );
-	$link=db_decode( $row[1] );
+    $res = $cid->prepare( "SELECT text, link FROM links WHERE cid=? ORDER BY text;" );
+    $res->execute( array( $catid ) );
+    $rowid=0;
+    foreach( $res->fetchall() as $row ) {
+        $desc=db_decode( $row['text'] );
+		$link=db_decode( $row['link'] );
         $entries[ $rowid ]="$desc<>$link";
+        $rowid++;
     }
-    sqlite_close( $cid );
 
     // Return them
     return $entries;
@@ -240,7 +243,7 @@ function db_searchEntries( $keyword, $name ){
     for( $rowid=0; $rowid < sqlite_num_rows( $res ); $rowid++ ){
         $row=sqlite_fetch_array( $res );
         $desc=db_decode( $row[0] );
-	$link=db_decode( $row[1] );
+		$link=db_decode( $row[1] );
         $entries[ $rowid ]="$desc<>$link";
     }
     sqlite_close( $cid );
@@ -253,10 +256,11 @@ function db_searchEntries( $keyword, $name ){
  * and turns it into something appropriate for the
  * database. html entities (&*;) will be resolved too.
  **/
-function db_encode( $text ){
+function db_encode( $cid, $text ){
 //    $text=str_replace("'", "''", $text);
-	$text=html_entity_decode($text);
-    return sqlite_escape_string( $text );
+    $text=html_entity_decode($text);
+    // return sqlite_escape_string( $text );
+    return $cid->quote($text);
 }
 
 /**
@@ -272,49 +276,47 @@ function db_decode( $text ){
  * append an entry
  **/
 function db_appendEntry($cat, $link, $desc){
-    $desc = db_encode( $desc );
-    $link = db_encode( $link );
-    $cat = db_encode( $cat );
     $cid = db_openDB();
+    $cid->beginTransaction();
     $catid = db_getCatID( $cat, $cid );
-    $res = sqlite_query( "SELECT cid FROM links WHERE ( cid=$catid AND link='$link' AND text='$desc' );", $cid );
-    if($res===false) echo( "SELECT cid FROM links WHERE ( cid=$catid AND link='$link' AND text='$desc' );<br>" );
-    if( sqlite_num_rows( $res ) < 1 ){
-	$res = sqlite_query( "INSERT INTO links ( cid, link, text ) VALUES ( $catid, '$link', '$desc' );", $cid );
-	if(!$res){
-	    echo "INSERT INTO links ( cid, link, text ) VALUES ( $catid, '$link', '$desc' );<br>\n";
-	}
-    }
-    sqlite_close( $cid );
+	$res = $cid->prepare( "INSERT OR IGNORE INTO links ( cid, link, text ) VALUES ( ?, ?, ? );" );
+	if( false === $res->execute( array( $catid, $link, $desc ) ) ) {
+   		echo "db_appendEntry: INSERT INTO links ( cid, link, text ) VALUES ( $catid, '$link', '$desc' );<br>\n";
+   		print_r( $cid->errorInfo() );
+   		$cid->rollback();
+	} else
+	$cid->commit();
 }
 
 /**
  * get an entry by description
  **/
 function db_getLink($cat, $desc){
-    $desc=db_encode( $desc );
-    $cat =db_encode( $cat );
     $cid=db_openDB();
     $catid=db_getCatID( $cat, $cid );
-    $res = sqlite_query( "SELECT link FROM links WHERE ( cid=$catid AND text='$desc' );", $cid);
-    if( (!$res) || (sqlite_num_rows( $res ) < 1 ) ) return "";
-    $row=sqlite_fetch_array( $res );
-    return db_decode( $row[0] );
+    $res = $cid->prepare( "SELECT link FROM links WHERE ( cid=? AND text=? );" );
+	$res->execute( array( $catid, $desc ) );
+//    if ($res === false) return "";
+	$row = $res->fetchAll();
+	if( empty( $row ) ) return "";
+    return db_decode( $row[0]['link'] );
 }
 
 /**
  * delete an entry
  **/
 function db_removeEntry($cat, $link, $desc){
-    $cat = db_encode( $cat );
-    $link = db_encode( $link );
-    $desc = db_encode( $desc );
     $cid = db_openDB();
+	$cid->beginTransaction();
     $catid = db_getCatID( $cat, $cid );
-    $res = sqlite_query( "DELETE FROM links WHERE ( cid=$catid AND link='$link' AND text='$desc' );", $cid );
-    if( !$res )
-      echo( "DELETE FROM links WHERE ( cid=$catid AND link='$link' AND text='$desc' );<br>");
-    sqlite_close( $cid );
+    $res = $cid->prepare( "DELETE FROM links WHERE ( cid=? AND link=? AND text=? );" );
+	if( false === $res->execute( array( $catid, $link, $desc ) ) ) {
+    	echo( "DELETE FROM links WHERE ( cid=$catid AND link='$link' AND text='$desc' );<br>");
+      	print_r( $cid->errorInfo() );
+		$cid->rollback();
+	 } else {
+    	$cid->commit();
+    }
 }
 
 /**
@@ -322,18 +324,17 @@ function db_removeEntry($cat, $link, $desc){
  **/
 function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc){
     // Update the entry.
-    $cat = db_encode( $cat );
-    $nlink = db_encode( $nlink );
-    $ndesc = db_encode( $ndesc );
-    $olink = db_encode( $olink );
-    $odesc = db_encode( $odesc );
     $cid = db_openDB();
     $catid = db_getCatID( $cat, $cid );
-    $res = sqlite_query( "UPDATE OR IGNORE links SET link='$nlink',text='$ndesc' WHERE ( cid=$catid AND link='$olink' AND text='$odesc' );", $cid );
-     if( !$res )
-      echo( "UPDATE links SET link='$nlink',text='$ndesc' WHERE ( cid=$catid AND link='$olink' AND text='$odesc' );<br>");
-
-    sqlite_close( $cid );
+	$cid->beginTransaction();
+    $res = $cid->prepare( "UPDATE OR IGNORE links SET link=?,text=? WHERE ( cid=? AND link=? AND text=? );" );
+	if( false === $res->execute( array( $nlink, $ndesc, $catid, $olink, $odesc ) ) ) {
+	 	echo( "UPDATE links SET link='$nlink',text='$ndesc' WHERE ( cid=$catid AND link='$olink' AND text='$odesc' );<br>");
+      	print_r( $cid->errorInfo() );
+		$cid->rollback();
+	} else {
+    	$cid->commit();
+    }
 }
 
 /**
@@ -343,20 +344,17 @@ function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc){
  * accordingly.
  **/
 function db_moveEntry($source, $link, $desc, $target){
-    $scat = db_encode( $source );
-    $link = db_encode( $link );
-    $desc = db_encode( $desc );
-    $tcat = db_encode( $target );
     $cid = db_openDB();
-    $scatid = db_getCatID( $scat, $cid );
-    $tcatid = db_getCatID( $tcat, $cid );
-    $res = sqlite_query( "UPDATE OR IGNORE links SET cid=$tcatid WHERE ( cid=$scatid AND link='$link' AND text='$desc' );", $cid );
-    if( !$res )
-      echo( "UPDATE OR IGNORE links SET cid=$tcatid WHERE ( cid=$scatid AND link='$link' AND text='$desc' );<br>");
-
-    sqlite_close( $cid );
-//    db_removeEntry($source, $link, $desc);
-//    db_appendEntry($target, $link, $desc);
+	$cid->beginTransaction();
+    $scatid = db_getCatID( $source, $cid );
+    $tcatid = db_getCatID( $target, $cid );
+    $res = $cid->prepare( "UPDATE OR IGNORE links SET cid=? WHERE ( cid=? AND link=? AND text=? );" );
+	if( false === $res->execute( array( $tcatid, $scatid, $link, $desc ) ) ) {
+    	echo( "UPDATE OR IGNORE links SET cid=$tcatid WHERE ( cid=$scatid AND link='$link' AND text='$desc' );<br>");
+      	print_r( $cid->errorInfo() );
+		$cid->rollback();
+	 } else {
+    	$cid->commit();
+    }
 }
-
 ?>

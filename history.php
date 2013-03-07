@@ -1,6 +1,8 @@
 <?PHP
 /** history **/
 // $current$
+// moved to GIT
+// Removed generic database code, should be handled by PDO instead
 // Porting to PHP5.4+
 // Introducing PDO database engine
 // <li>2.9.10a

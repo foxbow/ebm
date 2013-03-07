@@ -1,5 +1,5 @@
 <?PHP
-$version="3.0beta";
+$version="3.0beta2";
 
 if(!file_exists("settings.php")){
      require("header.php");
@@ -17,7 +17,10 @@ if(!file_exists("settings.php")){
      exit;
 }
 
-require( "settings.php" );
+/* 
+ * Load the database connector 
+*/
+require_once( "PDO.php" );
 
 // Get the values that can't be overridden by user
 // uservalues are in setter.php
