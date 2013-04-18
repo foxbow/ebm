@@ -81,17 +81,13 @@ function currentUser($login){
 }
 
 function getSetting( $name, $value, $uname ){
-     if ($uname=="")
-        return db_getSetting( $name, $value, "ebm" );
-     else
-        return db_getSetting( $name, $value, $uname );
+    if ($uname=="") $uname="ebm";
+    return db_getSetting( $name, $value, $uname );
 }
 
 function setSetting( $name, $value, $uname ){
-     if($uname=="")
-        return db_setSetting( $name, $value, "ebm" );
-     else
-        return db_setSetting( $name, $value, $uname );
+    if ($uname=="") $uname="ebm";
+	return db_setSetting( $name, $value, $uname );
 }
 
 /**

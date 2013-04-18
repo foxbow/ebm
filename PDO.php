@@ -3,8 +3,10 @@ require_once( "settings.php" );
 
 $ebm_database="$ebm_prefix";
 
-// Initialize the basics and create the 'root' user called 'ebm'
-// with password 'ebm'
+/**
+ * Initialize the basics and create the 'root' user called 'ebm'
+ * with password 'ebm'
+ **/
 function db_initDB(){
     echo "<h1>Could not open db?!</h1>";
 return;
@@ -31,6 +33,10 @@ function db_openDB(){
     return $cid;
 }
 
+/**
+ * run the database internal cleanup
+ * @todo: does this really work on any DB?
+ **/
 function db_cleanup(){
     $cid = db_openDB();
     $res = $cid->exec( "VACUUM;" );
@@ -38,10 +44,12 @@ function db_cleanup(){
 
 /**
  * return a value to a given setting.
+ * 1. try the global settings
+ * 2. try local settings
+ * 3. return result ( $def if $name is not set at all )
  **/
 function db_getSetting( $name, $def, $uname ){
     $cid = db_openDB();
-//    $res = $cid->prepare( "SELECT value FROM settings WHERE name='$name' AND uname='ebm';" );
     $res = $cid->prepare( "SELECT value FROM settings WHERE name=? AND uname=?;" );
     if( $res === false){
         db_initDB();
@@ -50,12 +58,12 @@ function db_getSetting( $name, $def, $uname ){
 	$res->execute( array( $name, 'ebm' ) );
     $ret = $res->fetchAll();
 	 if( !empty( $ret ) )
-	    $def = db_decode($ret[0]['value']);
+	    $def = $ret[0]['value'];
 
     $res->execute( array( $name, $uname ) );
     $ret = $res->fetchAll();
     if( !empty( $ret ) )
-        $def = db_decode($ret[0]['value']);
+        $def = $ret[0]['value'];
 
     return $def;
 }
@@ -66,11 +74,16 @@ function db_getSetting( $name, $def, $uname ){
  **/
 function db_setSetting( $name, $value, $uname ){
     $cid = db_openDB();
-    $value = db_encode( $value );
-    $res = sqlite_query( "DELETE FROM settings WHERE name='$name' AND uname='$uname';", $cid );
-    $res = sqlite_query( "INSERT INTO settings VALUES ('$name','$value','$uname');", $cid );
-    sqlite_close( $cid );
-    return db_decode($value);
+	$cid->beginTransaction();
+    $res = $cid->prepare( "INSERT OR REPLACE INTO settings VALUES (?,?,?);" );
+	if( (false === $res ) || ( false === $res->execute( array( $name, $value, $uname ) ) ) ) {
+    	echo( "INSERT OR REPLACE INTO settings VALUES ('$name','$value','$uname');<br>");
+      	print_r( $cid->errorInfo() );
+		$cid->rollback();
+	 } else {
+    	$cid->commit();
+    }
+    return $value;
 }
 
 /**
@@ -84,6 +97,10 @@ function db_getPassword( $name ){
     return $ret['0']['password'];
 }
 
+/**
+ * Add a new user
+ * @todo: PDO!
+ */
 function db_addUser( $name, $pass ){
     $cid = db_openDB();
     $res = sqlite_query( "SELECT password FROM users WHERE name='$name';", $cid  );
@@ -92,6 +109,10 @@ function db_addUser( $name, $pass ){
     sqlite_close( $cid );
 }
 
+/**
+ * Set new password
+ * @todo: PDO!
+ **/
 function db_updateUser( $name, $pass ){
     $cid = db_openDB();
     $res = sqlite_query( "UPDATE users SET password='$pass' WHERE name='$name';", $cid );
@@ -101,6 +122,7 @@ function db_updateUser( $name, $pass ){
 /**
  * deletes an user together will all his categories
  * and links.
+ * @todo: PDO!
  **/
 function db_deleteUser( $user ){
     $cid = db_openDB();
@@ -130,14 +152,15 @@ function db_deleteUser( $user ){
  **/
 function db_getUsers(){
     $cid = db_openDB();
-    $res = sqlite_query( "SELECT name FROM users;", $cid );
-    $rows = sqlite_num_rows( $res );
+    // Get the users
+    $res = $cid->query( "SELECT name FROM users;" );
     $users = array();
-    for( $i=0; $i < $rows; $i++ ){
-	$val = sqlite_fetch_array( $res );
-	$users[ $i ] = $val[0];
-    }
-    sqlite_close( $cid );
+    $i = 0;
+    foreach( $res->fetchAll() as $row ) {
+		$users[ $i ] = $row['name'];
+      	$i++;
+	}
+    // Return them
     return $users;
 }
 
@@ -153,31 +176,41 @@ function db_getCategories(){
     $category = array();
     $i = 0;
     foreach( $res->fetchAll() as $row ) {
-		$category[ $i ] = db_decode($row['cat']);
-      $i++;
+		$category[ $i ] = $row['cat'];
+      	$i++;
 	 }
 
     // Return them
     return $category;
 }
 
+/**
+ * Creates a new category and sets a new catid
+ **/
 function db_newCat( $cat ){
     global $ebm_user;
-    $cat=db_encode($cat);
+
     $cid = db_openDB();
-    $res = sqlite_query( "SELECT count(*) FROM cats WHERE ( name='$ebm_user' AND cat='$cat' );", $cid );
-    $val = sqlite_fetch_array( $res );
-    if( $val[0] == 0 ){
-	$res = sqlite_query( "SELECT MAX(cid) FROM cats;", $cid );
-	$ret = sqlite_fetch_array( $res );
-	$val = $ret[0];
-	if("$val" == "") $val = 0;
-	else $val++;
-	$res = sqlite_query( "INSERT INTO cats ( name, cat, cid ) VALUES ( '$ebm_user', '$cat', $val );", $cid );
-    }
-    sqlite_close( $cid );
+    $cid->beginTransaction();
+	$res = $cid->query( "SELECT MAX(cid) FROM cats;" );
+	$val = 0;
+	while ($row = $res->fetch(PDO::FETCH_NUM)) {
+		$val = $row[0];
+	}
+	$val=$val+1;
+	$res = $cid->prepare( "INSERT OR IGNORE INTO cats ( name, cat, cid ) VALUES ( ?, ?, ? );" );
+	if( false === $res->execute( array( $ebm_user, $cat, $val ) ) ) {
+   		echo "db_appendEntry: INSERT OR IGNORE INTO cats ( name, cat, cid ) VALUES ( '$ebm_user', '$cat', $val );<br>\n";
+   		print_r( $cid->errorInfo() );
+   		$cid->rollback();
+	} else
+	$cid->commit();
 }
 
+/**
+ * deletes a category
+ * @todo: PDO!
+ **/
 function db_removeCat( $cat ){
     global $ebm_user;
     $cat = db_encode( $cat );
@@ -188,6 +221,10 @@ function db_removeCat( $cat ){
     sqlite_close( $cid );
 }
 
+/**
+ * rename a category
+ * @todo: PDO!
+ **/
 function db_renCat( $cat, $ncat ){
     global $ebm_user;
     $cat = db_encode( $cat );
@@ -197,8 +234,9 @@ function db_renCat( $cat, $ncat ){
     sqlite_close( $cid );
 }
 
-/*
- * should be done with a JOIN instead..
+/**
+ * returnd the id for a given category name
+ * @todo: should be done with a JOIN instead..
  */
 function db_getCatID( $cat, $cid ){
     global $ebm_user;
@@ -212,10 +250,12 @@ function db_getCatID( $cat, $cid ){
     return $catid[0]['cid'];
 }
 
-/*
+/**
  * returns all entries of a category in the form
  * description<>link
- */
+ * 
+ * @todo: This is a really, really bad heritage from plaintext file days
+ **/
 function db_getEntries( $cat ){
     $cid = db_openDB();
     $catid = db_getCatID( $cat, $cid );
@@ -225,51 +265,34 @@ function db_getEntries( $cat ){
     $res->execute( array( $catid ) );
     $rowid=0;
     foreach( $res->fetchall() as $row ) {
-        $desc=db_decode( $row['text'] );
-		$link=db_decode( $row['link'] );
+        $desc=$row['text'];
+		$link=$row['link'];
         $entries[ $rowid ]="$desc<>$link";
         $rowid++;
     }
-
-    // Return them
     return $entries;
 }
 
+/**
+ * search for a keyword
+ * @todo: see above! Also return catid for location
+ **/
 function db_searchEntries( $keyword, $name ){
-    $cid = db_openDB();
-    $keyword = db_encode( $keyword );
-    $res = sqlite_query( "SELECT text, link FROM links WHERE text LIKE '%$keyword%' AND cid IN (SELECT cid FROM cats WHERE name='$name') ORDER BY text;", $cid );
     $entries=array();
-    for( $rowid=0; $rowid < sqlite_num_rows( $res ); $rowid++ ){
-        $row=sqlite_fetch_array( $res );
-        $desc=db_decode( $row[0] );
-		$link=db_decode( $row[1] );
+	// Do not search for ALL entries.
+	if( $keyword == "" ) return $entries;
+    $cid = db_openDB();
+	$keyword="%$keyword%";
+    $res = $cid->prepare( "SELECT text, link FROM links WHERE text LIKE ? AND cid IN (SELECT cid FROM cats WHERE name=?) ORDER BY text;" );
+    $res->execute( array( $keyword, $name ) );
+    $rowid=0;
+    foreach( $res->fetchall() as $row ) {
+        $desc=$row['text'];
+		$link=$row['link'];
         $entries[ $rowid ]="$desc<>$link";
+        $rowid++;
     }
-    sqlite_close( $cid );
-
     return $entries;
-}
-
-/**
- * takes an addslashed text (like we get from a a'post'
- * and turns it into something appropriate for the
- * database. html entities (&*;) will be resolved too.
- **/
-function db_encode( $cid, $text ){
-//    $text=str_replace("'", "''", $text);
-    $text=html_entity_decode($text);
-    // return sqlite_escape_string( $text );
-    return $cid->quote($text);
-}
-
-/**
- * takes a database encoded string and returns is into
- * standard text format.
- **/
-function db_decode( $text ){
-    // return str_replace("''", "'", $text);
-    return $text;
 }
 
 /**
@@ -290,16 +313,17 @@ function db_appendEntry($cat, $link, $desc){
 
 /**
  * get an entry by description
+ *
+ * @todo: error handling!
  **/
 function db_getLink($cat, $desc){
     $cid=db_openDB();
     $catid=db_getCatID( $cat, $cid );
     $res = $cid->prepare( "SELECT link FROM links WHERE ( cid=? AND text=? );" );
 	$res->execute( array( $catid, $desc ) );
-//    if ($res === false) return "";
 	$row = $res->fetchAll();
 	if( empty( $row ) ) return "";
-    return db_decode( $row[0]['link'] );
+    return $row[0]['link'];
 }
 
 /**
@@ -339,9 +363,6 @@ function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc){
 
 /**
  * Move an entry from one category to another
- * Most simple solution follows - maybe for your
- * DB this is not the best way, then change it
- * accordingly.
  **/
 function db_moveEntry($source, $link, $desc, $target){
     $cid = db_openDB();
