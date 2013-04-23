@@ -16,7 +16,10 @@ echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
 echo "<rss version=\"0.92\">\n";
 echo "  <channel>\n";
 echo "    <title>$category</title>\n";
-echo "    <link>$ebmurl/index.php</link>\n";
+echo "    <link>$ebmurl/index.php?category=$category&#38;public=";
+    if ($ebm_user!="PUBLIC") echo "off";
+    else echo "on";
+echo "</link>\n";
 echo "	  <description>$ebm_title</description>\n";
 
 if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
@@ -26,6 +29,31 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   echo "      <description>Not allowed!</description>\n";
   echo "    </item>\n";
 }else{
+  if ( (($loguser!="") || ($publicadd=="on")) && ($toedit=="on")){
+    echo "    <item>\n";
+    echo "      <title>- Edit -</title>\n";
+    echo "      <link>$ebmurl/edit.php?category=$category";
+    if ($ebm_user!="PUBLIC") echo "&#38;public=off";
+    else echo "&#38;public=on";
+    echo "</link>\n";
+    echo "      <description>Edit Bookmarks on server</description>\n";
+    echo "    </item>\n";
+  }
+/** 
+ * is in the channel link now
+ *
+  else{
+    echo "    <item>\n";
+    echo "      <title>- $category -</title>\n";
+    echo "      <link>$ebmurl/index.php?category=$category&#38;public=";
+    if ($ebm_user!="PUBLIC") echo "off";
+    else echo "on";
+    echo "</link>\n";
+    echo "      <description>Go to $title</description>\n";
+    echo "    </item>\n";
+  }
+**/
+
   $entries=db_getEntries($category);
   sort($entries);
   foreach($entries as $entry){
@@ -37,25 +65,6 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
     echo "      <title>".str_replace("&", "&#38;", $name)."</title>\n";
     echo "      <link>".str_replace("&", "&#38;", $link)."</link>\n";
     echo "      <description>EBM Bookmark</description>\n";
-    echo "    </item>\n";
-  }
-  if ( (($loguser!="") || ($publicadd=="on")) && ($toedit=="on")){
-    echo "    <item>\n";
-    echo "      <title>- Edit -</title>\n";
-    echo "      <link>$ebmurl/edit.php?category=$category";
-    if ($ebm_user!="PUBLIC") echo "&#38;public=off";
-    else echo "&#38;public=on";
-    echo "</link>\n";
-    echo "      <description>Edit Bookmarks on server</description>\n";
-    echo "    </item>\n";
-  }else{
-    echo "    <item>\n";
-    echo "      <title>- $title -</title>\n";
-    echo "      <link>$ebmurl/index.php?category=$category&#38;public=";
-    if ($ebm_user!="PUBLIC") echo "off";
-    else echo "on";
-    echo "</link>\n";
-    echo "      <description>Go to $title</description>\n";
     echo "    </item>\n";
   }
     
