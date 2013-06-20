@@ -9,7 +9,6 @@ require("header.php");
 <tr><th>?</th><td>D'Oh!</td></tr>
 <tr><th><img src="park.gif"></th><td>Parks the entry in your personal startcategory.</td></tr>
 <tr><th><img src="kill.gif"></th><td>Deletes the current entry.</td></tr>
-<tr><th><img src="newwin.gif"></th><td>Opens the entry in a new window.</td></tr>
 <tr><th>[create]</th><td>Creates a new entry.</td></tr>
 <tr><th>EBM</th><td>Shows the full docs</td></tr>
 <tr><th>version x.x.x</th><td>Shows the version history</td></tr>

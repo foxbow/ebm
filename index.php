@@ -234,11 +234,6 @@ if($ebm_category!=""){
      // Links
      $lwidth=100-(50/$lrows);
      $factor=1;
-/** newwin became attached to the link **
-     if($newwin=="on"){
-          $factor += 1;
-     }
- ****************************************/
      if($shortcut=="on"){
           $factor += 1;
      }
@@ -291,12 +286,9 @@ if($ebm_category!=""){
 
           echo "    <td $bgclass=\"$rowcol\" width=\"$lpercent%\"><a href=\"$link\"";
           if($newwin=="on"){
-	      echo " target=\"_blank\"";
-//              echo "    <td $bgclass=\"$rowcol\" width=\"20\">\n";
-//              echo "      <a href=\"$link\" target=\"_blank\"><img border=\"0\" src=\"newwin.gif\"></a>\n";
-//              echo "    </td>\n";
+		      echo " target=\"_blank\"";
           }
-	  echo ">$name</a></td>\n";
+		  echo ">$name</a></td>\n";
           if($shortcut=="on"){
                 echo "    <td $bgclass=\"$rowcol\" width=\"20\">\n";
                 echo "      <form action=\"$myname\" method=\"post\">\n";

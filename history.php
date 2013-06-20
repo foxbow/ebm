@@ -1,6 +1,7 @@
 <?PHP
 /** history **/
 // $current$
+// Removed obsolete files
 // moved to GIT
 // Removed generic database code, should be handled by PDO instead
 // Porting to PHP5.4+

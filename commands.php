@@ -1,16 +1,11 @@
 <?PHP
-$version="3.0beta2";
+$version="3.0beta4";
 
 if(!file_exists("settings.php")){
      require("header.php");
      echo "<h1>Configuration missing!</h2>\n";
      echo "<p>Copy <b>config.ini</b> to <b>config.php</b>, set the desired database\n";
      echo "and the needed parameters and try again.</p>\n";
-     echo "<p>If you chose to use <i>SQLite</i> or <i>Plain Text</i> as database you\n";
-     echo "only need to set the <b>\$prefix</b> variable to the directory containing\n";
-     echo "the date. For <i>SQLite</i> the default <b>\".\"</b> should bear no problems.\n";
-     echo "Other Databases probably need initialization, see <b>db/init_postgres.sh</b>\n";
-     echo "as an example.</p>\n";
      echo "<p>This has only to be done once. Even after an update the settings\n";
      echo "will be preserved.</p>\n";
      require("footer.php");
@@ -33,13 +28,13 @@ if (!isset( $settings_loaded ) || ( $settings_loaded == "off" ) ) {
     $motd          = getSetting("motd", "", "ebm" );
 }
 
-	extract($_REQUEST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
-//import_request_variables("gp", "ebm_");
+extract($_REQUEST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
 error_reporting( E_ALL );
 
 // Find out where we are located
 $uripath=$_SERVER['PHP_SELF'];
 $uripath=substr($uripath, 0, strrpos($uripath, '/'));
+// @todo: what about https??
 $ebmurl="http://".$_SERVER['SERVER_NAME'].$uripath;
 
 /**

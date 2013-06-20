@@ -51,15 +51,20 @@ function db_cleanup(){
 function db_getSetting( $name, $def, $uname ){
     $cid = db_openDB();
     $res = $cid->prepare( "SELECT value FROM settings WHERE name=? AND uname=?;" );
+	// db_getSetting is the very first access to the database. If this fails make sure 
+	// the databese is available and retry.
     if( $res === false){
         db_initDB();
         return db_getSetting( $name, $def, $uname );
     }
+
+	// read the administrator set default
 	$res->execute( array( $name, 'ebm' ) );
     $ret = $res->fetchAll();
-	 if( !empty( $ret ) )
+	if( !empty( $ret ) )
 	    $def = $ret[0]['value'];
 
+	// read the user setting
     $res->execute( array( $name, $uname ) );
     $ret = $res->fetchAll();
     if( !empty( $ret ) )
@@ -91,10 +96,16 @@ function db_setSetting( $name, $value, $uname ){
  **/
 function db_getPassword( $name ){
     $cid = db_openDB();
-    $res = $cid->query( "SELECT password FROM users WHERE name='$name';" );
-	 $ret = $res->fetchAll();
-    if( empty( $ret ) ) return "";
-    return $ret['0']['password'];
+    $res = $cid->prepare( "SELECT password FROM users WHERE name=?;" );
+	if( (false === $res ) || ( false === $res->execute( array( $name ) ) ) ) {
+    	echo( "SELECT password FROM users WHERE name='$name';<br>");
+      	print_r( $cid->errorInfo() );
+		return "";
+	}
+
+	$ret = $res->fetchAll();
+	if( empty( $ret ) ) return "";
+	return $ret['0']['password'];
 }
 
 /**
@@ -149,6 +160,7 @@ function db_deleteUser( $user ){
 
 /**
  * returns all users
+ * @todo: error handling.
  **/
 function db_getUsers(){
     $cid = db_openDB();
@@ -166,6 +178,7 @@ function db_getUsers(){
 
 /*
  * returns an array containing all categories
+ * @todo: error handling
  */
 function db_getCategories(){
     global $ebm_user;
@@ -179,7 +192,6 @@ function db_getCategories(){
 		$category[ $i ] = $row['cat'];
       	$i++;
 	 }
-
     // Return them
     return $category;
 }
@@ -189,7 +201,6 @@ function db_getCategories(){
  **/
 function db_newCat( $cat ){
     global $ebm_user;
-
     $cid = db_openDB();
     $cid->beginTransaction();
 	$res = $cid->query( "SELECT MAX(cid) FROM cats;" );
@@ -199,7 +210,7 @@ function db_newCat( $cat ){
 	}
 	$val=$val+1;
 	$res = $cid->prepare( "INSERT OR IGNORE INTO cats ( name, cat, cid ) VALUES ( ?, ?, ? );" );
-	if( false === $res->execute( array( $ebm_user, $cat, $val ) ) ) {
+	if( (false === $res ) || ( false === $res->execute( array( $ebm_user, $cat, $val ) ) ) ) {
    		echo "db_appendEntry: INSERT OR IGNORE INTO cats ( name, cat, cid ) VALUES ( '$ebm_user', '$cat', $val );<br>\n";
    		print_r( $cid->errorInfo() );
    		$cid->rollback();
@@ -209,29 +220,43 @@ function db_newCat( $cat ){
 
 /**
  * deletes a category
- * @todo: PDO!
+ * @todo: join
  **/
 function db_removeCat( $cat ){
     global $ebm_user;
-    $cat = db_encode( $cat );
     $cid = db_openDB();
     $catid = db_getCatID( $cat, $cid );
-    $res = sqlite_query( "DELETE FROM links WHERE ( cid='$catid' );", $cid );
-    $res = sqlite_query( "DELETE FROM cats WHERE ( name='$ebm_user' AND cat='$cat' );", $cid );
-    sqlite_close( $cid );
+    $cid->beginTransaction();
+	$res = $cid->prepare( "DELETE FROM links WHERE ( cid=? );" );
+	if( (false === $res ) || ( false ===  $res->execute( array( $catid ) ) ) ) {
+   		echo "db_removeCat: DELETE FROM links WHERE ( cid='$catid' );<br>\n";
+   		print_r( $cid->errorInfo() );
+   		$cid->rollback();
+	} else {
+		$res = $cid->prepare( "DELETE FROM cats WHERE ( name=? AND cat=? );" );
+		if( (false === $res ) || ( false === $res->execute( array( $ebm_user, $cat ) ) ) ) {
+	   		echo "db_removeCat: DELETE FROM cats WHERE ( name='$ebm_user' AND cat='$cat' );<br>\n";
+	   		print_r( $cid->errorInfo() );
+	   		$cid->rollback();
+		} else
+		$cid->commit();
+	}
 }
 
 /**
  * rename a category
- * @todo: PDO!
  **/
 function db_renCat( $cat, $ncat ){
     global $ebm_user;
-    $cat = db_encode( $cat );
-    $ncat = db_encode( $ncat );
     $cid = db_openDB();
-    $res = sqlite_query( "UPDATE cats SET cat='$ncat' WHERE ( name='$ebm_user' and cat='$cat' );", $cid );
-    sqlite_close( $cid );
+    $cid->beginTransaction();
+	$res = $cid->prepare( "UPDATE cats SET cat=? WHERE ( name=? and cat=? );" );
+	if( (false === $res ) || ( false === $res->execute( array( $ncat, $ebm_user, $cat ) ) ) ) {
+   		echo "db_renCat: UPDATE cats SET cat='$ncat' WHERE ( name='$ebm_user' and cat='$cat' );<br>\n";
+   		print_r( $cid->errorInfo() );
+   		$cid->rollback();
+	} else
+	$cid->commit();
 }
 
 /**
@@ -241,7 +266,7 @@ function db_renCat( $cat, $ncat ){
 function db_getCatID( $cat, $cid ){
     global $ebm_user;
 	$res = $cid->prepare( "SELECT cid FROM cats WHERE ( name=? AND cat=? );" );
-	if( false === $res->execute( array( $ebm_user, $cat ) ) ) {
+	if( (false === $res ) || ( false === $res->execute( array( $ebm_user, $cat ) ) ) ) {
       	print_r( $cid->errorInfo() );
 		echo "db_getCatID: SELECT cid FROM cats WHERE ( name='$ebm_user' AND cat=$cat );<br>";
 		return -1;
@@ -303,7 +328,7 @@ function db_appendEntry($cat, $link, $desc){
     $cid->beginTransaction();
     $catid = db_getCatID( $cat, $cid );
 	$res = $cid->prepare( "INSERT OR IGNORE INTO links ( cid, link, text ) VALUES ( ?, ?, ? );" );
-	if( false === $res->execute( array( $catid, $link, $desc ) ) ) {
+	if( (false === $res ) || ( false === $res->execute( array( $catid, $link, $desc ) ) ) ) {
    		echo "db_appendEntry: INSERT INTO links ( cid, link, text ) VALUES ( $catid, '$link', '$desc' );<br>\n";
    		print_r( $cid->errorInfo() );
    		$cid->rollback();
@@ -334,7 +359,7 @@ function db_removeEntry($cat, $link, $desc){
 	$cid->beginTransaction();
     $catid = db_getCatID( $cat, $cid );
     $res = $cid->prepare( "DELETE FROM links WHERE ( cid=? AND link=? AND text=? );" );
-	if( false === $res->execute( array( $catid, $link, $desc ) ) ) {
+	if( (false === $res ) || ( false === $res->execute( array( $catid, $link, $desc ) ) ) ) {
     	echo( "DELETE FROM links WHERE ( cid=$catid AND link='$link' AND text='$desc' );<br>");
       	print_r( $cid->errorInfo() );
 		$cid->rollback();
@@ -352,7 +377,7 @@ function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc){
     $catid = db_getCatID( $cat, $cid );
 	$cid->beginTransaction();
     $res = $cid->prepare( "UPDATE OR IGNORE links SET link=?,text=? WHERE ( cid=? AND link=? AND text=? );" );
-	if( false === $res->execute( array( $nlink, $ndesc, $catid, $olink, $odesc ) ) ) {
+	if( (false === $res ) || ( false === $res->execute( array( $nlink, $ndesc, $catid, $olink, $odesc ) ) ) ) {
 	 	echo( "UPDATE links SET link='$nlink',text='$ndesc' WHERE ( cid=$catid AND link='$olink' AND text='$odesc' );<br>");
       	print_r( $cid->errorInfo() );
 		$cid->rollback();
@@ -370,7 +395,7 @@ function db_moveEntry($source, $link, $desc, $target){
     $scatid = db_getCatID( $source, $cid );
     $tcatid = db_getCatID( $target, $cid );
     $res = $cid->prepare( "UPDATE OR IGNORE links SET cid=? WHERE ( cid=? AND link=? AND text=? );" );
-	if( false === $res->execute( array( $tcatid, $scatid, $link, $desc ) ) ) {
+	if( (false === $res ) || ( false === $res->execute( array( $tcatid, $scatid, $link, $desc ) ) ) ) {
     	echo( "UPDATE OR IGNORE links SET cid=$tcatid WHERE ( cid=$scatid AND link='$link' AND text='$desc' );<br>");
       	print_r( $cid->errorInfo() );
 		$cid->rollback();
