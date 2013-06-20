@@ -9,8 +9,6 @@ if (!isset( $settings_loaded ) || ( $settings_loaded == "off" ) ) {
     $killbutton    = getSetting("killbutton", "off", $loguser);
     $newwin        = getSetting("newwin", "off", $loguser);
     $quicksearch   = getSetting("quicksearch", "off", $loguser);
-    $quickdict     = getSetting("quickdict", "off", $loguser);
-    $quickgoogle   = getSetting("quickgoogle", "off", $loguser);
     $usecss        = getSetting("usecss", "on", $loguser);
     $cssfile       = getSetting("cssfile", "ebm.css", $loguser);
     $jumptopriv    = getSetting("jumptopriv", "off", $loguser);

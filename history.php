@@ -1,6 +1,9 @@
 <?PHP
 /** history **/
 // $current$
+// Removed Google and Leo searches
+// Fix bug in searchpage header
+// 3.0beta4
 // Removed obsolete files
 // moved to GIT
 // Removed generic database code, should be handled by PDO instead

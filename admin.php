@@ -46,12 +46,6 @@ if( $ebm_cmd == "set" ){
     if( !isset( $ebm_quicksearch ) ) $ebm_quicksearch="off";
     if( $quicksearch != $ebm_quicksearch )
       $quicksearch = setSetting( "quicksearch", $ebm_quicksearch, $loguser );
-    if( !isset( $ebm_quickdict ) ) $ebm_quickdict="off";
-    if( $quickdict != $ebm_quickdict )
-      $quickdict = setSetting( "quickdict", $ebm_quickdict, $loguser );
-    if( !isset( $ebm_quickgoogle ) ) $ebm_quickgoogle="off";
-    if( $quickgoogle != $ebm_quickgoogle )
-      $quickgoogle = setSetting( "quickgoogle", $ebm_quickgoogle, $loguser );
     if( !isset( $ebm_usecss ) ) $ebm_usecss = "off";
     if( $usecss != $ebm_usecss )
       $usecss = setSetting( "usecss", $ebm_usecss, $loguser );
@@ -155,8 +149,6 @@ if($loguser=="ebm"){
 }
 lazyCheck("Jump to private categories after login", "jumptopriv", $jumptopriv);
 lazyCheck("Show search field", "quicksearch", $quicksearch);
-lazyCheck("Show dictionary field", "quickdict", $quickdict);
-lazyCheck("Show Google field", "quickgoogle", $quickgoogle);
 lazyCheck("Jump to edit page in livebookmarks", "toedit", $toedit);
 lazyCheck("Show Browse link in title", "showbrowse", $showbrowse);
 lazyCheck("Show Checklink link in title", "showval", $showval);

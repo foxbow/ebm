@@ -1,5 +1,5 @@
 <?PHP
-$version="3.0beta4";
+$version="3.0beta5";
 
 if(!file_exists("settings.php")){
      require("header.php");

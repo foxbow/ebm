@@ -42,32 +42,16 @@ echo "  </td>\n";
 echo "  <td $bgclass=\"$header\" width=\"20%\">\n";
 echo "    <a href=\"$ebmurl/logout.php\">Logout</a>\n";
 echo "  </td>\n";
-
 if($quicksearch=="on"){
      echo "  <td $bgclass=\"$header\" style=\"white-space:nowrap;\">\n";
-     echo "    <form action=\"$ebmurl/search.php\" method=\"post\"\n";
+     echo "    <form action=\"search.php\" method=\"post\">\n";
      echo "      <input name=\"search\" type=\"text\">\n";
      echo "      <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
      echo "      <input type=\"submit\" value=\"search\">\n";
      echo "    </form>\n";
      echo "  </td>\n";
 }
-if($quickdict=="on"){
-     echo "  <td $bgclass=\"$header\" style=\"white-space:nowrap;\">\n";
-     echo "    <form action=\"http://dict.leo.org/\" method=\"get\" target=\"_blank\">\n";
-     echo "      <input name=\"search\" type=\"text\">\n";
-     echo "      <input type=\"submit\" value=\"dict\">\n";
-     echo "    </form>\n";
-     echo "  </td>\n";
-}
-if($quickgoogle=="on"){
-     echo "  <td $bgclass=\"$header\" style=\"white-space:nowrap;\">\n";
-     echo "    <form action=\"http://www.google.de/search\" method=\"get\" target=\"_blank\">\n";
-     echo "      <input name=\"q\" type=\"text\">\n";
-     echo "      <input type=\"submit\" value=\"Google\">\n";
-     echo "    </form>\n";
-     echo "  </td>\n";
-}
+
 echo "  <td $bgclass=\"$header\" width=\"20\">\n";
 echo "    <a href=\"admin.php\">?</a>\n";
 echo "  </td>\n";
