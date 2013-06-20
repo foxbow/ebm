@@ -93,10 +93,8 @@ echo "  </tr>\n";
 
 $left=1;
 foreach($entries as $entry){
-    $entry=chop($entry);
-    $break=strpos($entry,"<>");
-    $name=substr($entry,0,$break);
-    $link=substr($entry,$break+2);
+    $name=$entry['desc'];
+    $link=$entry['link'];
 
     if($left==1){
         if($flag){
@@ -170,10 +168,8 @@ if($ebm_user != "PUBLIC"){
 
     $left=1;
     foreach($entries as $entry){
-        $entry=chop($entry);
-        $break=strpos($entry,"<>");
-        $name=substr($entry,0,$break);
-        $link=substr($entry,$break+2);
+        $name=$entry['desc'];
+        $link=$entry['link'];
 
         if($left==1){
             if($flag){

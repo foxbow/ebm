@@ -27,11 +27,7 @@ foreach($categories as $actual){
   $entries=db_getEntries($actual);
   sort($entries);
   foreach($entries as $entry){
-    $entry=chop($entry);
-    $break=strpos($entry,"<>");
-    $name=substr($entry,0,$break);
-    $link=substr($entry,$break+2);  
-    echo "            <DT><A HREF=\"$link\">$name</A>\n";
+    echo "            <DT><A HREF=\"".$entry['link']."\">".$entry['desc']."</A>\n";
   }
   echo "        </DL><p>\n";
 }
@@ -52,11 +48,7 @@ if(($ebm_user!="") && ($ebm_user!="ebm")){
     $entries=db_getEntries($actual);
     sort($entries);
     foreach($entries as $entry){
-      $entry=chop($entry);
-      $break=strpos($entry,"<>");
-      $name=substr($entry,0,$break);
-      $link=substr($entry,$break+2);
-      echo "            <DT><A HREF=\"$link\">$name</A>\n";
+      echo "            <DT><A HREF=\"".$entry['link']."\">."$entry['desc']."</A>\n";
     }
     echo "        </DL><p>\n";
   }

@@ -57,13 +57,9 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   $entries=db_getEntries($category);
   sort($entries);
   foreach($entries as $entry){
-    $entry=chop($entry);
-    $break=strpos($entry,"<>");
-    $name=substr($entry,0,$break);
-    $link=substr($entry,$break+2);
     echo "    <item>\n";
-    echo "      <title>".str_replace("&", "&#38;", $name)."</title>\n";
-    echo "      <link>".str_replace("&", "&#38;", $link)."</link>\n";
+    echo "      <title>".str_replace("&", "&#38;", $entry['desc'])."</title>\n";
+    echo "      <link>".str_replace("&", "&#38;", $entry['link'])."</link>\n";
     echo "      <description>EBM Bookmark</description>\n";
     echo "    </item>\n";
   }

@@ -276,10 +276,7 @@ function db_getCatID( $cat, $cid ){
 }
 
 /**
- * returns all entries of a category in the form
- * description<>link
- * 
- * @todo: This is a really, really bad heritage from plaintext file days
+ * returns all entries of a category
  **/
 function db_getEntries( $cat ){
     $cid = db_openDB();
@@ -292,7 +289,8 @@ function db_getEntries( $cat ){
     foreach( $res->fetchall() as $row ) {
         $desc=$row['text'];
 		$link=$row['link'];
-        $entries[ $rowid ]="$desc<>$link";
+        $entries[ $rowid ][ 'desc' ]=$desc;
+		$entries[ $rowid ][ 'link' ]=$link;
         $rowid++;
     }
     return $entries;
@@ -300,7 +298,6 @@ function db_getEntries( $cat ){
 
 /**
  * search for a keyword
- * @todo: see above! Also return catid for location
  **/
 function db_searchEntries( $keyword, $name ){
     $entries=array();
@@ -314,7 +311,8 @@ function db_searchEntries( $keyword, $name ){
     foreach( $res->fetchall() as $row ) {
         $desc=$row['text'];
 		$link=$row['link'];
-        $entries[ $rowid ]="$desc<>$link";
+        $entries[ $rowid ][ 'desc' ]=$desc;
+		$entries[ $rowid ][ 'link' ]=$link;
         $rowid++;
     }
     return $entries;

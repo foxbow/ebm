@@ -38,11 +38,7 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   $entries=db_getEntries($category);
   sort($entries);
   foreach($entries as $entry){
-    $entry=chop($entry);
-    $break=strpos($entry,"<>");
-    $name=substr($entry,0,$break);
-    $link=substr($entry,$break+2);
-    echo "  <a href='$link'>$name</a>\n";
+    echo "  <a href='.".$entry['link']."'>".$entry['desc']."</a>\n";
   }
   if ( (($loguser!="") || ($publicadd=="on")) && ($toedit=="on")){
 /*

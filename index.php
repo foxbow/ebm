@@ -252,11 +252,6 @@ if($ebm_category!=""){
 
      $left=1;
      foreach($entries as $entry){
-          $entry=chop($entry);
-          $break=strpos($entry,"<>");
-          $name=substr($entry,0,$break);
-          $link=substr($entry,$break+2);
-
           if($left==1){
                 if($flag){
                      $rowcol="$oddrow";
@@ -268,19 +263,19 @@ if($ebm_category!=""){
                 echo "  <tr>\n";
           }
 
-          echo "    <td $bgclass=\"$rowcol\" width=\"$lpercent%\"><a href=\"$link\"";
+          echo "    <td $bgclass=\"$rowcol\" width=\"$lpercent%\"><a href=\"".$entry['link']."\"";
           if($newwin=="on"){
 		      echo " target=\"_blank\"";
           }
-		  echo ">$name</a></td>\n";
+		  echo ">".$entry['desc']."</a></td>\n";
           if($shortcut=="on"){
                 echo "    <td $bgclass=\"$rowcol\" width=\"20\">\n";
                 echo "      <form action=\"$myname\" method=\"post\">\n";
                 echo "        <input type=\"hidden\" name=\"public\" value=\"off\">\n";
                 echo "        <input type=\"hidden\" name=\"cmd\" value=\"append\">\n";
                 echo "        <input type=\"hidden\" name=\"category\" value=\"$defcat\">\n";
-                echo "        <input type=\"hidden\" name=\"link\" value=\"$link\">\n";
-                echo "        <input type=\"hidden\" name=\"line\" value=\"$name\">\n";
+                echo "        <input type=\"hidden\" name=\"link\" value=\"".$entry['link']."\">\n";
+                echo "        <input type=\"hidden\" name=\"line\" value=\"".$entry['desc']."\">\n";
                 echo "        <input type=\"image\" src=\"park.gif\">\n";
                 echo "      </form>\n";
                 echo "    </td>\n";
@@ -291,8 +286,8 @@ if($ebm_category!=""){
                 echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
                 echo "        <input type=\"hidden\" name=\"cmd\" value=\"remove\">\n";
                 echo "        <input type=\"hidden\" name=\"file\" value=\"$ebm_category\">\n";
-                echo "        <input type=\"hidden\" name=\"line\" value=\"$name\">\n";
-                echo "        <input type=\"hidden\" name=\"link\" value=\"$link\">\n";
+                echo "        <input type=\"hidden\" name=\"link\" value=\"".$entry['link']."\">\n";
+                echo "        <input type=\"hidden\" name=\"line\" value=\"".$entry['desc']."\">\n";
                 echo "        <input type=\"image\" src=\"kill.gif\">\n";
                 echo "      </form>\n";
                 echo "    </td>\n";

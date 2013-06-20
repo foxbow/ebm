@@ -29,11 +29,7 @@ $table=array();
 $entries=db_getEntries($category);
 sort($entries);
 foreach($entries as $entry){
-  $entry=chop($entry);
-  $break=strpos($entry,"<>");
-  $name=substr($entry,0,$break);
-  $link=substr($entry,$break+2);
-  $table[$name]=$link;
+  $table[$entry['desc']]=$entry['link'];
 }
 
 $names=array_keys($table);

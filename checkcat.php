@@ -69,9 +69,8 @@ $flag = true;
 $left = true;
 foreach($entries as $entry){
     $entry=chop($entry);
-    $break=strpos($entry,"<>");
-    $name=substr($entry,0,$break);
-    $ebm_link=substr($entry,$break+2);
+    $name=$entry['desc'];
+    $ebm_link=$entry['link'];
     if($flag) $rowcol="oddrow";
     else $rowcol="everow";
 

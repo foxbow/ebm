@@ -99,10 +99,7 @@ echo "        <input type=\"hidden\" name=\"category\" value=\"$actual\">\n";
 echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
 echo "        <select name=\"line\">\n";
 foreach($entries as $entry){
-    $entry=chop($entry);
-    $break=strpos($entry,"<>");
-    $name=substr($entry,0,$break);
-    echo "          <option>$name</option>\n";
+    echo "          <option>".$entry['desc']."</option>\n";
 }
 echo "        </select>\n";
 echo "        to\n";
@@ -120,10 +117,8 @@ echo "    </td>\n";
 echo "  </tr>\n";
 
 foreach($entries as $entry){
-    $entry=chop($entry);
-    $break=strpos($entry,"<>");
-    $name=substr($entry,0,$break);
-    $ebm_link=substr($entry,$break+2);
+    $name=$entry['desc'];
+    $ebm_link=$entry['link'];
     if($flag) $rowcol="oddrow";
     else $rowcol="everow";
 
