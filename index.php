@@ -275,7 +275,7 @@ if($ebm_category!=""){
                 echo "        <input type='hidden' name='cmd' value='append'>\n";
                 echo "        <input type='hidden' name='category' value='$defcat'>\n";
                 echo "        <input type='hidden' name='link' value='".$entry['link']."'>\n";
-                echo "        <input type='hidden' name='line' value='".$entry['desc']."'>\n";
+                echo "        <input type='hidden' name='line' value=\"".$entry['desc']."\">\n";
                 echo "        <input type='image' src='park.gif'>\n";
                 echo "      </form>\n";
                 echo "    </td>\n";
@@ -287,7 +287,7 @@ if($ebm_category!=""){
                 echo "        <input type='hidden' name='cmd' value='remove'>\n";
                 echo "        <input type='hidden' name='file' value='$ebm_category'>\n";
                 echo "        <input type='hidden' name='link' value='".$entry['link']."'>\n";
-                echo "        <input type='hidden' name='line' value='".$entry['desc']."'>\n";
+                echo "        <input type='hidden' name='line' value=\"".$entry['desc']."\">\n";
                 echo "        <input type='image' src='kill.gif'>\n";
                 echo "      </form>\n";
                 echo "    </td>\n";
