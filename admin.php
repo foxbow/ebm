@@ -46,9 +46,6 @@ if( $ebm_cmd == "set" ){
     if( !isset( $ebm_quicksearch ) ) $ebm_quicksearch="off";
     if( $quicksearch != $ebm_quicksearch )
       $quicksearch = setSetting( "quicksearch", $ebm_quicksearch, $loguser );
-    if( !isset( $ebm_usecss ) ) $ebm_usecss = "off";
-    if( $usecss != $ebm_usecss )
-      $usecss = setSetting( "usecss", $ebm_usecss, $loguser );
     if( !isset( $ebm_cssfile ) ) $ebm_cssfile = "ebm.css";
     if( $cssfile != $ebm_cssfile )
       $cssfile = setSetting( "cssfile", $ebm_cssfile, $loguser );
@@ -153,7 +150,6 @@ lazyCheck("Jump to edit page in livebookmarks", "toedit", $toedit);
 lazyCheck("Show Browse link in title", "showbrowse", $showbrowse);
 lazyCheck("Show Checklink link in title", "showval", $showval);
 lazyCheck("Show RSS link in title", "showrss", $showrss);
-lazyCheck("Use CSS", "usecss", $usecss);
 
 echo "  <tr><td>CSS to use</td>\n";
 echo "    <td>\n";
@@ -169,7 +165,6 @@ foreach($cssfiles as $actual){
 }
 echo "      </select>\n";
 echo "  </td></tr>\n";
-// lazyText ("CSS to use", "cssfile", $cssfile);
 echo "  <tr><td>&nbsp;</td><td><input type=\"submit\" value=\"Set\"></td></tr>\n";
 echo "  </table>\n";
 echo "  <input type=\"hidden\" name=\"cmd\" value=\"set\">\n";

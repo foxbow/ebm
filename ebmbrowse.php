@@ -18,7 +18,7 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   echo "    <meta http-equiv=\"refresh\" content=\"0; URL=$ebmurl/login.php?user=$ebm_user\">\n";
   echo "    <title>EBM Forwarder</title>\n";
   echo "  </head><body>\n";
-  echo "    Ooops, this browser seems incapable of forwardingi!<br>\n";
+  echo "    Ooops, this browser seems incapable of forwarding!<br>\n";
   echo "    Please log in as <a href='$ebmurl/login.php?user=$ebm_user'>$ebm_user</a>.\n";
   echo "  </body>\n";
   echo "</html>\n";
@@ -55,8 +55,7 @@ echo "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-
 echo "  <meta http-equiv=\"expires\" content=\"0\">\n";
 echo "  <meta name=\"robots\" content=\"noindex\">\n";
 echo "  <title>$ebm_current</title>\n";
-if( $usecss=="on" )
-  echo "  <link rel=\"stylesheet\" type=\"text/css\" href=\"css/$cssfile\">\n";
+echo "  <link rel=\"stylesheet\" type=\"text/css\" href=\"css/$cssfile\">\n";
 echo "	<link rel=\"SHORTCUT ICON\" href=\"favicon.ico\">\n";
 echo "</head>\n";
 
@@ -71,4 +70,4 @@ echo "  <noframes>\n";
 echo "    <body><h1>Sorry, I need frames for this feature</h1></body>\n";
 echo "  </noframes>\n";
 echo "</frameset></html>\n";
-?>	
+?>

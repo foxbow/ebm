@@ -7,8 +7,7 @@
   <meta name="robots" content="noindex">
 <?PHP
   echo "  <title>$title</title>\n";
-  if( $usecss=="on" )
-    echo "  <link rel=\"stylesheet\" type=\"text/css\" href=\"css/$cssfile\">\n";
+  echo "  <link rel=\"stylesheet\" type=\"text/css\" href=\"css/$cssfile\">\n";
   if(isset($ebm_category)) $cat=$ebm_category;
   else $cat=$defcat;
   if(isset($ebm_user)){

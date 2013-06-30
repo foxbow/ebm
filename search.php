@@ -21,43 +21,43 @@ echo "<h1>Searchresults for $ebm_search</h1>\n";
 
 echo "<center>\n";
 
-echo "<table $bgclass=\"$header\" cellpadding=\"1\" border=\"0\" width=\"98%\">\n";
+echo "<table class='header' cellpadding='1' border='0' width='98%'>\n";
 /*
  * Add the view and the logout switch
  */
-echo "  <tr><td $bgclass=\"$header\" width=\"20%\">\n";
+echo "  <tr><td class='header' width='20%'>\n";
 if($ebm_public=="off"){
-    echo "      <a href=\"$ebmurl/index.php?public=on\">Public links</a>\n";
+    echo "      <a href='$ebmurl/index.php?public=on'>Public links</a>\n";
 }else{
     if($loguser==""){
-        echo "      <a href=\"$ebmurl/login.php\">Login</a>\n";
+        echo "      <a href='$ebmurl/login.php'>Login</a>\n";
     }else if( $loguser=="ebm" ){
-        echo "      <a href=\"$ebmurl/admin.php\">Admin</a>\n";
+        echo "      <a href='$ebmurl/admin.php'>Admin</a>\n";
     }else{
-        echo "      <a href=\"$ebmurl/index.php?public=off\">$loguser's links</a>\n";
+        echo "      <a href='$ebmurl/index.php?public=off'>$loguser's links</a>\n";
     }
 }
 echo "  </td>\n";
 
-echo "  <td $bgclass=\"$header\" width=\"20%\">\n";
-echo "    <a href=\"$ebmurl/logout.php\">Logout</a>\n";
+echo "  <td class='header' width='20%'>\n";
+echo "    <a href='$ebmurl/logout.php'>Logout</a>\n";
 echo "  </td>\n";
 if($quicksearch=="on"){
-     echo "  <td $bgclass=\"$header\" style=\"white-space:nowrap;\">\n";
-     echo "    <form action=\"search.php\" method=\"post\">\n";
-     echo "      <input name=\"search\" type=\"text\">\n";
-     echo "      <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
-     echo "      <input type=\"submit\" value=\"search\">\n";
+     echo "  <td class='header' style='white-space:nowrap;'>\n";
+     echo "    <form action='search.php' method='post'>\n";
+     echo "      <input name='search' type='text'>\n";
+     echo "      <input type='hidden' name='public' value='$ebm_public'>\n";
+     echo "      <input type='submit' value='search'>\n";
      echo "    </form>\n";
      echo "  </td>\n";
 }
 
-echo "  <td $bgclass=\"$header\" width=\"20\">\n";
-echo "    <a href=\"admin.php\">?</a>\n";
+echo "  <td class='header' width='20'>\n";
+echo "    <a href='admin.php'>?</a>\n";
 echo "  </td>\n";
 echo "</tr></table>\n";
 
-echo "\n<p style=\"margin:20px;\"></p>\n";
+echo "\n<p style='margin:20px;'></p>\n";
 
 // get all categories
 $categories=getCategories();
@@ -84,9 +84,9 @@ $factor=1;
 $lpercent=(105-(5*$factor))/$lrows;
 $colspan = $factor*$lrows;
 
-echo "<table $bgclass=\"$links\" cellpadding=\"1\" border=\"0\" width=\"$lwidth%\">\n";
+echo "<table class='links' cellpadding='1' border='0' width='$lwidth%'>\n";
 echo "  <tr>\n";
-echo "    <td $bgclass=\"$catlist\" width=\"95%\" colspan=\"$colspan\">\n";
+echo "    <td class='catlist' width='95%' colspan='$colspan'>\n";
 echo "      $ebm_search in public links\n";
 echo "    </td>\n";
 echo "  </tr>\n";
@@ -98,9 +98,9 @@ foreach($entries as $entry){
 
     if($left==1){
         if($flag){
-            $rowcol="$oddrow";
+            $rowcol="oddrow";
         }else{
-            $rowcol="$everow";
+            $rowcol="everow";
         }
         $flag = !$flag;
 
@@ -108,9 +108,9 @@ foreach($entries as $entry){
     }
 
     if($newwin=="on")
-	echo "    <td $bgclass=\"$rowcol\" width=\"$lpercent%\"><a href=\"$link\" target='_blank'>$name</a></td>\n";
+	echo "    <td class='$rowcol' width='$lpercent%'><a href='$link' target='_blank'>$name</a></td>\n";
     else
-	echo "    <td $bgclass=\"$rowcol\" width=\"$lpercent%\"><a href=\"$link\">$name</a></td>\n";
+	echo "    <td class='$rowcol' width='$lpercent%'><a href='$link'>$name</a></td>\n";
 
     if($left==$lrows){
         echo "  </tr>\n";
@@ -123,7 +123,7 @@ foreach($entries as $entry){
 
 if($left!=1){
     for($i=$left; $i<=$lrows; $i++){
-        echo "    <td width=\"$lpercent%\">&nbsp;</td>\n";
+        echo "    <td width='$lpercent%'>&nbsp;</td>\n";
         for($j=1;$j<$factor;$j++) echo "    <td>&nbsp;</td>\n";
     }
     echo "  </tr>\n";
@@ -136,7 +136,7 @@ echo"</table>\n";
  **/
 
 if($ebm_user != "PUBLIC"){
-    echo "\n<p style=\"margin:20px;\"></p>\n";
+    echo "\n<p style='margin:20px;'></p>\n";
 
     $flag = true;
     $entries = searchEntries($ebm_search, $loguser);
@@ -159,9 +159,9 @@ if($ebm_user != "PUBLIC"){
     $lpercent=(105-(5*$factor))/$lrows;
     $colspan = $factor*$lrows;
 
-    echo "<table $bgclass=\"$links\" cellpadding=\"1\" border=\"0\" width=\"$lwidth%\">\n";
+    echo "<table class='links' cellpadding='1' border='0' width='$lwidth%'>\n";
     echo "  <tr>\n";
-    echo "    <td $bgclass=\"$catlist\" width=\"95%\" colspan=\"$colspan\">\n";
+    echo "    <td class='catlist' width='95%' colspan='$colspan'>\n";
     echo "      $ebm_search in $loguser's links\n";
     echo "    </td>\n";
     echo "  </tr>\n";
@@ -173,9 +173,9 @@ if($ebm_user != "PUBLIC"){
 
         if($left==1){
             if($flag){
-                $rowcol="$oddrow";
+                $rowcol="oddrow";
             }else{
-                $rowcol="$everow";
+                $rowcol="everow";
             }
             $flag = !$flag;
 
@@ -183,9 +183,9 @@ if($ebm_user != "PUBLIC"){
         }
 
         if($newwin=="on")
-	    echo "    <td $bgclass=\"$rowcol\" width=\"$lpercent%\"><a href=\"$link\" target='_blank'>$name</a></td>\n";
+	    echo "    <td class='$rowcol' width='$lpercent%'><a href='$link' target='_blank'>$name</a></td>\n";
 	else
-            echo "    <td $bgclass=\"$rowcol\" width=\"$lpercent%\"><a href=\"$link\">$name</a></td>\n";
+            echo "    <td class='$rowcol' width='$lpercent%'><a href='$link'>$name</a></td>\n";
 
         if($left==$lrows){
             echo "  </tr>\n";
@@ -198,7 +198,7 @@ if($ebm_user != "PUBLIC"){
 
     if($left!=1){
         for($i=$left; $i<=$lrows; $i++){
-            echo "    <td width=\"$lpercent%\">&nbsp;</td>\n";
+            echo "    <td width='$lpercent%'>&nbsp;</td>\n";
             for($j=1;$j<$factor;$j++) echo "    <td>&nbsp;</td>\n";
         }
         echo "  </tr>\n";
@@ -207,18 +207,18 @@ if($ebm_user != "PUBLIC"){
     echo"</table>\n";
 }
 
-echo "\n<p style=\"margin:20px;\"></p>\n";
+echo "\n<p style='margin:20px;'></p>\n";
 
-echo "<table $bgclass=\"$newlink\" cellpadding=\"1\" border=\"0\">\n";
+echo "<table class='newlink' cellpadding='1' border='0'>\n";
 echo "<tr>\n";
-echo "  <form action=\"search.php\" method=\"post\"\n";
-echo "    <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
+echo "  <form action='search.php' method='post'\n";
+echo "    <input type='hidden' name='public' value='$ebm_public'>\n";
 echo "    <td>\n";
 echo "      New Search:\n";
 echo "    </td><td>\n";
-echo "      <input name=\"search\" type=\"text\">\n";
+echo "      <input name='search' type='text'>\n";
 echo "    </td><td>\n";
-echo "      <input type=\"submit\" value=\"search\">\n";
+echo "      <input type='submit' value='search'>\n";
 echo "    </td>\n";
 echo "  </form>\n";
 echo "</tr>\n";
@@ -226,9 +226,9 @@ echo "</table>\n\n";
 
 echo "</center>\n";
 
-echo "\n<p style=\"margin:20px;\"></p>\n";
-echo "<a class='flow' href=\"$ebmurl/index.php\">Back</a>\n";
-echo "\n<p style=\"margin:20px;\"></p>\n";
+echo "\n<p style='margin:20px;'></p>\n";
+echo "<a class='flow' href='$ebmurl/index.php'>Back</a>\n";
+echo "\n<p style='margin:20px;'></p>\n";
 
 require("footer.php");
 ?>

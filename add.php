@@ -51,47 +51,47 @@ if(($ebm_category=="categories") ||
     $ebm_category=$defcat;
 }
 
-echo "<table $bgclass=\"$header\" cellpadding=\"1\" border=\"0\" width=\"98%\">\n";
+echo "<table class='header' cellpadding='1' border='0' width='98%'>\n";
 /*
  * Add the view and the logout switch
  */
-echo "  <tr><td $bgclass=\"$header\" width=\"20%\">\n";
+echo "  <tr><td class='header' width='20%'>\n";
 if($ebm_public=="off"){
-	 echo "      <a href=\"add.php?public=on&gotlink=$ebm_gotlink&gotline=$ebm_gotline\">Public links</a>\n";
+	 echo "      <a href='add.php?public=on&gotlink=$ebm_gotlink&gotline=$ebm_gotline'>Public links</a>\n";
 }else{
 	 if($loguser==""){
 		  if($ebm_category==""){
-				echo "      <a href=\"login.php\">Login</a>\n";
+				echo "      <a href='login.php'>Login</a>\n";
 		  }else{
-				echo "      <a href=\"login.php?category=$ebm_category\"><b><i>Login</i></b></a>\n";
+				echo "      <a href='login.php?category=$ebm_category'><b><i>Login</i></b></a>\n";
 		  }
 	 }else if( $loguser=="ebm" ){
-		  echo "      <a href=\"admin.php\">Admin</a>\n";
+		  echo "      <a href='admin.php'>Admin</a>\n";
 	 }else{
-		  echo "      <a href=\"add.php?public=off&gotlink=$ebm_gotlink&gotline=$ebm_gotline\">$loguser's links</a>\n";
+		  echo "      <a href='add.php?public=off&gotlink=$ebm_gotlink&gotline=$ebm_gotline'>$loguser's links</a>\n";
 	 }
 }
 echo "  </td>\n";
 
-echo "  <td $bgclass=\"$header\" width=\"20%\">\n";
-echo "    <a href=\"logout.php\">Logout</a>\n";
+echo "  <td class='header' width='20%'>\n";
+echo "    <a href='logout.php'>Logout</a>\n";
 echo "  </td>\n";
 
 if($quicksearch=="on"){
-     echo "  <td $bgclass=\"$header\" style=\"white-space:nowrap;\">\n";
-     echo "    <form action=\"search.php\" method=\"post\"\n";
-     echo "      <input name=\"search\" type=\"text\">\n";
-     echo "      <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
-     echo "      <input type=\"submit\" value=\"search\">\n";
+     echo "  <td class='header' style='white-space:nowrap;'>\n";
+     echo "    <form action='search.php' method='post'\n";
+     echo "      <input name='search' type='text'>\n";
+     echo "      <input type='hidden' name='public' value='$ebm_public'>\n";
+     echo "      <input type='submit' value='search'>\n";
      echo "    </form>\n";
      echo "  </td>\n";
 }
-echo "  <td $bgclass=\"$header\" width=\"20\">\n";
-echo "    <a href=\"admin.php\">?</a>\n";
+echo "  <td class='header' width='20'>\n";
+echo "    <a href='admin.php'>?</a>\n";
 echo "  </td>\n";
 echo "</tr></table>\n";
 
-echo "\n<p style=\"margin:20px;\"></p>\n";
+echo "\n<p style='margin:20px;'></p>\n";
 
 $categories=getCategories();
 sort($categories);
@@ -99,14 +99,14 @@ sort($categories);
 if( ($publicadd=="on") || ($loguser!="") ){
      // New entry
      if(count($categories > 0)){
-          echo "<table $bgclass=\"$newlink\" cellpadding=\"1\" border=\"0\">\n";
+          echo "<table class='newlink' cellpadding='1' border='0'>\n";
           echo "<tr>\n";
-          echo "<form action=\"index.php\" method=\"post\">\n";
-          echo "  <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
-          echo "  <input type=\"hidden\" name=\"cmd\" value=\"append\">\n";
-          echo "    <td>New Link</td><td><input type=\"text\" name=\"link\" value=\"$ebm_gotlink\"></td>\n";
-          echo "    <td>description:</td><td><input type=\"text\" name=\"line\" value=\"$ebm_gotline\"></td>\n";
-          echo "    <td>in</td><td><select name=\"category\">\n";
+          echo "<form action='index.php' method='post'>\n";
+          echo "  <input type='hidden' name='public' value='$ebm_public'>\n";
+          echo "  <input type='hidden' name='cmd' value='append'>\n";
+          echo "    <td>New Link</td><td><input type='text' name='link' value='$ebm_gotlink'></td>\n";
+          echo "    <td>description:</td><td><input type='text' name='line' value='$ebm_gotline'></td>\n";
+          echo "    <td>in</td><td><select name='category'>\n";
           foreach($categories as $actual){
                 $actual=chop($actual);
                 if($actual!=$ebm_category){
@@ -116,12 +116,12 @@ if( ($publicadd=="on") || ($loguser!="") ){
                 }
           }
           echo "  </select></td>\n";
-          echo "  <td><input type=\"submit\" value=\"create\"></td>\n";
+          echo "  <td><input type='submit' value='create'></td>\n";
           echo "</form>\n\n";
           echo"</tr>\n";
           echo "</table>\n\n";
      }else{
-  echo "<table cellpadding=\"1\" border=\"0\" bgcolor=\"#ddffdd\">\n";
+  echo "<table cellpadding='1' border='0' bgcolor='#ddffdd'>\n";
   echo "<tr>\n";
   echo "<th>Log in first to add links.</th>\n";
   echo"</tr>\n";
@@ -131,9 +131,9 @@ if( ($publicadd=="on") || ($loguser!="") ){
 
 echo "</center>\n";
 
-echo "\n<p style=\"margin:20px;\"></p>\n";
-echo "<a href=\"index.php\">Back</a>\n";
-echo "\n<p style=\"margin:20px;\"></p>\n";
+echo "\n<p style='margin:20px;'></p>\n";
+echo "<a href='index.php'>Back</a>\n";
+echo "\n<p style='margin:20px;'></p>\n";
 
 require("footer.php");
 ?>

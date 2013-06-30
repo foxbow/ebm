@@ -97,48 +97,48 @@ if(!$incat) $ebm_category="";
 // sort the categories
 sort($categories);
 
-echo "<table $bgclass=\"$header\" cellpadding=\"1\" border=\"0\" width=\"98%\">\n";
+echo "<table class='header' cellpadding='1' border='0' width='98%'>\n";
 /*
  * Add the view and the logout switch
  */
-echo "  <tr><td $bgclass=\"$header\" width=\"20%\">\n";
+echo "  <tr><td class='header' width='20%'>\n";
 if($ebm_public=="off"){
-	 echo "      <a href=\"$myname?public=on\">Public links</a>\n";
+	 echo "      <a href='$myname?public=on'>Public links</a>\n";
 }else{
 	 if($loguser==""){
 		  if($ebm_category==""){
-				echo "      <a href=\"login.php\">Login</a>\n";
+				echo "      <a href='login.php'>Login</a>\n";
 		  }else{
-				echo "      <a href=\"login.php?category=$ebm_category\"><b><i>Login</i></b></a>\n";
+				echo "      <a href='login.php?category=$ebm_category'><b><i>Login</i></b></a>\n";
 		  }
 	 }else if( $loguser=="ebm" ){
-		  echo "      <a href=\"admin.php\">Admin</a>\n";
+		  echo "      <a href='admin.php'>Admin</a>\n";
 	 }else{
-		  echo "      <a href=\"$myname?public=off\">$loguser's links</a>\n";
+		  echo "      <a href='$myname?public=off'>$loguser's links</a>\n";
 	 }
 }
 echo "  </td>\n";
 
-echo "  <td $bgclass=\"$header\" width=\"20%\">\n";
-echo "    <a href=\"logout.php\">Logout</a>\n";
+echo "  <td class='header' width='20%'>\n";
+echo "    <a href='logout.php'>Logout</a>\n";
 echo "  </td>\n";
 
 if($quicksearch=="on"){
-     echo "  <td $bgclass=\"$header\" style=\"white-space:nowrap;\">\n";
-     echo "    <form action=\"search.php\" method=\"post\">\n";
-     echo "      <input name=\"search\" type=\"text\">\n";
-     echo "      <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
-     echo "      <input type=\"submit\" value=\"search\">\n";
+     echo "  <td class='header' style='white-space:nowrap;'>\n";
+     echo "    <form action='search.php' method='post'>\n";
+     echo "      <input name='search' type='text'>\n";
+     echo "      <input type='hidden' name='public' value='$ebm_public'>\n";
+     echo "      <input type='submit' value='search'>\n";
      echo "    </form>\n";
      echo "  </td>\n";
 }
-echo "  <td $bgclass=\"$header\" width=\"20\">\n";
-echo "    <a href=\"admin.php\">?</a>\n";
+echo "  <td class='header' width='20'>\n";
+echo "    <a href='admin.php'>?</a>\n";
 echo "  </td>\n";
 echo "</tr></table>\n";
 
 // Open the master Table
-echo "<table $bgclass=\"$catlist\" cellpadding=\"1\" border=\"0\" width=\"98%\">\n";
+echo "<table class='catlist' cellpadding='1' border='0' width='98%'>\n";
 $left=1;
 
 /*
@@ -146,13 +146,13 @@ $left=1;
  */
 foreach($categories as $actual){
      if($left==1){
-          echo "  <tr><td $bgclass=\"$catlist\" width=\"$percent%\">\n";
+          echo "  <tr><td class='catlist' width='$percent%'>\n";
      }else{
-          echo "  <td $bgclass=\"$catlist\" width=\"$percent%\">\n";
+          echo "  <td class='catlist' width='$percent%'>\n";
      }
      $actual=chop($actual);
      $href = $myname."?category=".urlencode($actual)."&public=".urlencode($ebm_public);
-    echo "    <a href=\"$href\">$actual</a>\n";
+    echo "    <a href='$href'>$actual</a>\n";
      if($left!=$rows){
           echo "  </td>\n";
      }else{
@@ -167,15 +167,15 @@ foreach($categories as $actual){
  */
 if(($publicadd=="on")||($loguser!="")){
      if($left==1){
-          echo "  <tr><td width=\"$percent%\" valign=\"top\">\n";
+          echo "  <tr><td width='$percent%' valign='top'>\n";
      }else{
-          echo "  <td $bgclass=\"$catlist\" style=\"white-space:nowrap;\" width=\"$percent%\" valign=\"top\">\n";
+          echo "  <td class='catlist' style='white-space:nowrap;' width='$percent%' valign='top'>\n";
      }
-     echo "    <form action=\"$myname\" method=\"post\">\n";
-     echo "      <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
-     echo "      <input type=\"hidden\" name=\"cmd\" value=\"newcat\">\n";
-     echo "      <input type=\"text\" name=\"category\">\n";
-     echo "      <input type=\"submit\" value=\"*\">\n";
+     echo "    <form action='$myname' method='post'>\n";
+     echo "      <input type='hidden' name='public' value='$ebm_public'>\n";
+     echo "      <input type='hidden' name='cmd' value='newcat'>\n";
+     echo "      <input type='text' name='category'>\n";
+     echo "      <input type='submit' value='*'>\n";
      echo "    </form>\n";
      if($left!=$rows){
           echo "  </td>\n";
@@ -197,7 +197,7 @@ if($left>1){
 // Close the master Table
 echo"</table>\n";
 
-echo "\n<p style=\"margin:20px;\"></p>\n";
+echo "\n<p style='margin:20px;'></p>\n";
 
 // The actual links
 if($ebm_category!=""){
@@ -227,25 +227,25 @@ if($ebm_category!=""){
      $lpercent=(105-(5*$factor))/$lrows;
      $colspan = $factor*$lrows;
 
-     echo "<table $bgclass=\"$links\" cellpadding=\"1\" border=\"0\" width=\"$lwidth%\">\n";
+     echo "<table class='links' cellpadding='1' border='0' width='$lwidth%'>\n";
      echo "  <tr>\n";
-     echo "    <td $bgclass=\"$catlist\" width=\"95%\" colspan=\"$colspan\">\n";
+     echo "    <td class='catlist' width='95%' colspan='$colspan'>\n";
      if ($showbrowse == "on")
-       echo "      <a class='flow' href=\"$ebmurl/ebmbrowse.php?user=$ebm_user&category=".urlencode($ebm_category)."\">Browse $ebm_category</a>\n";
+       echo "      <a class='flow' href='$ebmurl/ebmbrowse.php?user=$ebm_user&category=".urlencode($ebm_category)."'>Browse $ebm_category</a>\n";
      else
        echo "      $ebm_category\n";
      if ($showval == "on")
-       echo "      (<a class='flow' href=\"$ebmurl/checkcat.php?public=$ebm_public&category=".urlencode($ebm_category)."\">check</a>)\n";
+       echo "      (<a class='flow' href='$ebmurl/checkcat.php?public=$ebm_public&category=".urlencode($ebm_category)."'>check</a>)\n";
       
      if(($publicadd=="on")||($loguser!="")){
           $href = "edit.php?category=".urlencode($ebm_category)."&public=".urlencode($ebm_public);
-          echo "      (<a class='flow' href=\"$href\">edit</a>)\n";
+          echo "      (<a class='flow' href='$href'>edit</a>)\n";
      }
      if($showrss == "on"){
        if($ebm_user=="PUBLIC")
-         echo "      (<a class='flow' href=\"$ebmurl/ebm2rss.php?category=".urlencode($ebm_category)."\">rss</a>)\n";
+         echo "      (<a class='flow' href='$ebmurl/ebm2rss.php?category=".urlencode($ebm_category)."'>rss</a>)\n";
        else 
-         echo "      (<a class='flow' href=\"$ebmurl/ebm2rss.php?user=$ebm_user&category=".urlencode($ebm_category)."\">rss</a>)\n";
+         echo "      (<a class='flow' href='$ebmurl/ebm2rss.php?user=$ebm_user&category=".urlencode($ebm_category)."'>rss</a>)\n";
      }
      echo "    </td>\n";
      echo "  </tr>\n";
@@ -254,41 +254,41 @@ if($ebm_category!=""){
      foreach($entries as $entry){
           if($left==1){
                 if($flag){
-                     $rowcol="$oddrow";
+                     $rowcol="oddrow";
                 }else{
-                     $rowcol="$everow";
+                     $rowcol="everow";
                 }
                 $flag = !$flag;
 
                 echo "  <tr>\n";
           }
 
-          echo "    <td $bgclass=\"$rowcol\" width=\"$lpercent%\"><a href=\"".$entry['link']."\"";
+          echo "    <td class='$rowcol' width='$lpercent%'><a href='".$entry['link']."'";
           if($newwin=="on"){
-		      echo " target=\"_blank\"";
+		      echo " target='_blank'";
           }
 		  echo ">".$entry['desc']."</a></td>\n";
           if($shortcut=="on"){
-                echo "    <td $bgclass=\"$rowcol\" width=\"20\">\n";
-                echo "      <form action=\"$myname\" method=\"post\">\n";
-                echo "        <input type=\"hidden\" name=\"public\" value=\"off\">\n";
-                echo "        <input type=\"hidden\" name=\"cmd\" value=\"append\">\n";
-                echo "        <input type=\"hidden\" name=\"category\" value=\"$defcat\">\n";
-                echo "        <input type=\"hidden\" name=\"link\" value=\"".$entry['link']."\">\n";
-                echo "        <input type=\"hidden\" name=\"line\" value=\"".$entry['desc']."\">\n";
-                echo "        <input type=\"image\" src=\"park.gif\">\n";
+                echo "    <td class='$rowcol' width='20'>\n";
+                echo "      <form action='$myname' method='post'>\n";
+                echo "        <input type='hidden' name='public' value='off'>\n";
+                echo "        <input type='hidden' name='cmd' value='append'>\n";
+                echo "        <input type='hidden' name='category' value='$defcat'>\n";
+                echo "        <input type='hidden' name='link' value='".$entry['link']."'>\n";
+                echo "        <input type='hidden' name='line' value='".$entry['desc']."'>\n";
+                echo "        <input type='image' src='park.gif'>\n";
                 echo "      </form>\n";
                 echo "    </td>\n";
           }
           if($killbutton=="on"){
-                echo "    <td $bgclass=\"$rowcol\" width=\"20\">\n";
-                echo "      <form action=\"$myname\" method=\"post\">\n";
-                echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
-                echo "        <input type=\"hidden\" name=\"cmd\" value=\"remove\">\n";
-                echo "        <input type=\"hidden\" name=\"file\" value=\"$ebm_category\">\n";
-                echo "        <input type=\"hidden\" name=\"link\" value=\"".$entry['link']."\">\n";
-                echo "        <input type=\"hidden\" name=\"line\" value=\"".$entry['desc']."\">\n";
-                echo "        <input type=\"image\" src=\"kill.gif\">\n";
+                echo "    <td class='$rowcol' width='20'>\n";
+                echo "      <form action='$myname' method='post'>\n";
+                echo "        <input type='hidden' name='public' value='$ebm_public'>\n";
+                echo "        <input type='hidden' name='cmd' value='remove'>\n";
+                echo "        <input type='hidden' name='file' value='$ebm_category'>\n";
+                echo "        <input type='hidden' name='link' value='".$entry['link']."'>\n";
+                echo "        <input type='hidden' name='line' value='".$entry['desc']."'>\n";
+                echo "        <input type='image' src='kill.gif'>\n";
                 echo "      </form>\n";
                 echo "    </td>\n";
           }
@@ -304,7 +304,7 @@ if($ebm_category!=""){
 
      if($left!=1){
           for($i=$left; $i<=$lrows; $i++){
-                echo "    <td width=\"$lpercent%\">&nbsp;</td>\n";
+                echo "    <td width='$lpercent%'>&nbsp;</td>\n";
                 for($j=1;$j<$factor;$j++) echo "    <td>&nbsp;</td>\n";
           }
           echo "  </tr>\n";
@@ -313,25 +313,25 @@ if($ebm_category!=""){
      echo"</table>\n";
 }
 
-echo "\n<p style=\"margin:20px;\"></p>\n";
+echo "\n<p style='margin:20px;'></p>\n";
 
 if( ($publicadd=="on") || ($loguser!="") ){
      // New entry
      if(count($categories > 0)){
-          echo "<table $bgclass=\"$newlink\" cellpadding=\"1\" border=\"0\">\n";
+          echo "<table class='newlink' cellpadding='1' border='0'>\n";
           echo "<tr>\n";
-          echo "<form action=\"$myname\" method=\"post\">\n";
-          echo "  <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
-          echo "  <input type=\"hidden\" name=\"cmd\" value=\"append\">\n";
-	  echo "    <td><a href=\"javascript:link=document.URL;line=document.title;if(window.confirm('Add '+link+' as '+line+' to $ebm_category?')){window.location='$ebmurl/add.php?public=$ebm_public&category=$ebm_category&gotlink='+escape(document.URL)+'&gotline='+escape(document.title);}else{window.stop();}\"";
-	  echo "title=\"Pull this Bookmarklet to your toolbar for autoadding pages to $ebm_category\">";
-          echo "Add URL</a></td><td><input type=\"text\" name=\"link\"></td>\n";
-          echo "    <td>description:</td><td><input type=\"text\" name=\"line\"></td>\n";
+          echo "<form action='$myname' method='post'>\n";
+          echo "  <input type='hidden' name='public' value='$ebm_public'>\n";
+          echo "  <input type='hidden' name='cmd' value='append'>\n";
+	  echo "    <td><a href='javascript:link=document.URL;line=document.title;if(window.confirm('Add '+link+' as '+line+' to $ebm_category?')){window.location='$ebmurl/add.php?public=$ebm_public&category=$ebm_category&gotlink='+escape(document.URL)+'&gotline='+escape(document.title);}else{window.stop();}'";
+	  echo "title='Pull this Bookmarklet to your toolbar for autoadding pages to $ebm_category'>";
+          echo "Add URL</a></td><td><input type='text' name='link'></td>\n";
+          echo "    <td>description:</td><td><input type='text' name='line'></td>\n";
 //          echo "    <td>in</td>";
-	  echo "    <td><a href=\"javascript:link=document.URL;line=document.title;window.location='$ebmurl/index.php?public=$ebm_public&category=$ebm_category&link='+escape(document.URL)+'&line='+escape(document.title)+'&cmd=append';\"";
-	  echo "title=\"Pull this Bookmarklet to your toolbar for quick autoadding pages to $ebm_category\">";
+	  echo "    <td><a href='javascript:link=document.URL;line=document.title;window.location='$ebmurl/index.php?public=$ebm_public&category=$ebm_category&link='+escape(document.URL)+'&line='+escape(document.title)+'&cmd=append';'";
+	  echo "title='Pull this Bookmarklet to your toolbar for quick autoadding pages to $ebm_category'>";
 	  echo "in</a></td>\n";
-	  echo "    <td><select name=\"category\">\n";
+	  echo "    <td><select name='category'>\n";
           foreach($categories as $actual){
                 $actual=chop($actual);
                 if($actual!=$ebm_category){
@@ -341,13 +341,13 @@ if( ($publicadd=="on") || ($loguser!="") ){
                 }
           }
           echo "  </select></td>\n";
-          echo "  <td><input type=\"submit\" value=\"OK\">";
+          echo "  <td><input type='submit' value='OK'>";
 	  echo "</td>\n";
           echo "</form>\n\n";
           echo"</tr>\n";
           echo "</table>\n\n";
      }else{
-#  echo "<table cellpadding=\"1\" border=\"0\" bgcolor=\"#ddffdd\">\n";
+#  echo "<table cellpadding='1' border='0' bgcolor='#ddffdd'>\n";
 #  echo "<tr>\n";
 #  echo "<th>Log in first to add links.</th>\n";
 #  echo"</tr>\n";
