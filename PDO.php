@@ -275,6 +275,18 @@ function db_getCatID( $cat, $cid ){
     return $catid[0]['cid'];
 }
 
+function db_getCatName( $cat, $cid ){
+    global $ebm_user;
+	$res = $cid->prepare( "SELECT cat FROM cats WHERE ( cid=? );" );
+	if( (false === $res ) || ( false === $res->execute( array( $cat ) ) ) ) {
+      	print_r( $cid->errorInfo() );
+		echo "db_getCatName: SELECT cat FROM cats WHERE ( cid='$cat' );<br>";
+		return -1;
+    }
+    $catid = $res->fetchAll();
+    return $catid[0]['cat'];
+}
+
 /**
  * returns all entries of a category
  **/
@@ -305,12 +317,13 @@ function db_searchEntries( $keyword, $name ){
 	if( $keyword == "" ) return $entries;
     $cid = db_openDB();
 	$keyword="%$keyword%";
-    $res = $cid->prepare( "SELECT text, link FROM links WHERE text LIKE ? AND cid IN (SELECT cid FROM cats WHERE name=?) ORDER BY text;" );
+    $res = $cid->prepare( "SELECT cid, text, link FROM links WHERE text LIKE ? AND cid IN (SELECT cid FROM cats WHERE name=?) ORDER BY cid, text;" );
     $res->execute( array( $keyword, $name ) );
     $rowid=0;
     foreach( $res->fetchall() as $row ) {
         $desc=$row['text'];
 		$link=$row['link'];
+		$entries[ $rowid ][ 'cat' ]=db_getCatName( $row['cid'], $cid );
         $entries[ $rowid ][ 'desc' ]=$desc;
 		$entries[ $rowid ][ 'link' ]=$link;
         $rowid++;
