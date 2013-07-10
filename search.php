@@ -17,6 +17,10 @@ require("header.php");
 
 $ebm_search=strtolower($ebm_search);
 
+if(isset($ebm_cmd) && $ebm_cmd=="remove"){
+    remove($ebm_file, $ebm_link, $ebm_line );
+}
+
 echo "<h1>Searchresults for $ebm_search</h1>\n";
 
 echo "<center>\n";
@@ -95,7 +99,7 @@ echo "\n<p style='margin:20px;'></p>\n";
 require("footer.php");
 
 function printSearch( $keyword, $username ) {
-global $newwin;
+global $newwin, $killbutton,$ebm_public;
 	$lastcat="";
 	$flag = true;
 
@@ -116,6 +120,10 @@ global $newwin;
 	// Links
 	$lwidth=100-(50/$lrows);
 	$factor=1;
+	
+	if($killbutton=="on"){
+	    $factor += 1;
+    }
 
 	$lpercent=(105-(5*$factor))/$lrows;
 	$colspan = $factor*$lrows;
@@ -165,6 +173,19 @@ global $newwin;
 		echo "<a href='$link'";
 		if($newwin=="on")echo "target='_blank'";
 		echo ">$name</a></td>\n";
+		if($killbutton=="on"){
+			echo "    <td class='$rowcol' width='20'>\n";
+		    echo "      <form action='search.php' method='post'>\n";
+		    echo "        <input type='hidden' name='public' value='$ebm_public'>\n";
+		    echo "        <input type='hidden' name='cmd' value='remove'>\n";
+		    echo "        <input type='hidden' name='file' value='$lastcat'>\n";
+		    echo "        <input type='hidden' name='link' value='$link'>\n";
+		    echo "        <input type='hidden' name='line' value=\"$name\">\n";
+			echo "		  <input type='hidden' name='search' value='$keyword'>\n";
+		    echo "        <input type='image' src='kill.gif'>\n";
+		    echo "      </form>\n";
+		    echo "    </td>\n";
+		}
 
 		if($left==$lrows){
 		    echo "  </tr>\n";
