@@ -206,7 +206,7 @@ function db_renCat( $cat, $ncat ){
 }
 
 /**
- * returnd the id for a given category name
+ * returns the id for a given category name
  */
 function db_getCatID( $cat ){
     global $ebm_user;	
@@ -214,28 +214,13 @@ function db_getCatID( $cat ){
     return $catid[0]['cid'];
 }
 
+/**
+ * returns the category name to a given ID
+ */
 function db_getCatName( $cat, $cid ){
     global $ebm_user;
-	$res = $cid->prepare( "SELECT cat FROM cats WHERE ( cid=? );" );
-	if( (false === $res ) || ( false === $res->execute( array( $cat ) ) ) ) {
-      	print_r( $cid->errorInfo() );
-		echo "db_getCatName: SELECT cat FROM cats WHERE ( cid='$cat' );<br>";
-		return -1;
-    }
-    $catid = $res->fetchAll();
-    return $catid[0]['cat'];
-}
-
-function db_getCatName( $cat, $cid ){
-    global $ebm_user;
-	$res = $cid->prepare( "SELECT cat FROM cats WHERE ( cid=? );" );
-	if( (false === $res ) || ( false === $res->execute( array( $cat ) ) ) ) {
-      	print_r( $cid->errorInfo() );
-		echo "db_getCatName: SELECT cat FROM cats WHERE ( cid='$cat' );<br>";
-		return -1;
-    }
-    $catid = $res->fetchAll();
-    return $catid[0]['cat'];
+	$res = db_exec( "SELECT cat FROM cats WHERE ( cid=? );", array( $cat ) );
+    return $res[0]['cat'];
 }
 
 /**
