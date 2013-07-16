@@ -26,12 +26,12 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   $entries=getCategories();
   sort($entries);
   foreach($entries as $entry){
-    echo "  <a class='sidebar' href='mobile.php?category=$entry'>".$entry."</a>\n";
+    echo "  <a class='mobile' href='mobile.php?category=$entry'>".$entry."</a>\n";
   }
   if( $ebm_user == "PUBLIC" ) {
-    echo "<hr><a class='sidebar' href='$ebmurl/login.php?return=mobilecat.php'><b>Log in</b></a>\n";
+    echo "<hr><a class='mobile' href='$ebmurl/login.php?return=mobilecat.php'><b>Log in</b></a>\n";
   } else {
-    echo "<hr><a class='sidebar' href='$ebmurl/logout.php?return=mobilecat.php'><b>Log out</b></a>\n";
+    echo "<hr><a class='mobile' href='$ebmurl/logout.php?return=mobilecat.php'><b>Log out</b></a>\n";
   }
 }
 echo "</body></html>\n";
