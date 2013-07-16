@@ -4,6 +4,9 @@ require("commands.php");
 if( !isset($ebm_user) ) $ebm_user="";
 $ebm_user = chop($ebm_user);
 
+if( !isset($ebm_return) || $ebm_return=="" ) $ebm_return="index.php";
+
+
 if( !isset($ebm_persist) ) $ebm_persist="off";
 
 if( isset($ebm_pass) ){
@@ -18,7 +21,7 @@ if( isset($ebm_pass) ){
 	    setcookie( "user", "$ebm_user" );
 	    setcookie( "pass", "$ebm_pass" );
 	}      // header("HTTP/1.0 301");
-	$header="Location: index.php";
+	$header="Location: $ebm_return";
 	
 	if( getSetting("jumptopriv", "off", $ebm_user)  == "on" ){
 	    $header=$header."?public=off";
@@ -44,6 +47,7 @@ echo "        <td><input type=\"password\" name=\"pass\" value=\"\">\n";
 if(isset($ebm_category)){
   echo"             <input type=\"hidden\" name=\"category\" value=\"$ebm_category\">\n";
 }
+echo"             <input type=\"hidden\" name=\"return\" value=\"$ebm_return\">\n";
 echo "        </td>\n";
 echo "    </tr>\n";
 echo "    <tr><td>Remember Login:</td>\n";
