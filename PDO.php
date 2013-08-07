@@ -217,7 +217,7 @@ function db_getCatID( $cat ){
 /**
  * returns the category name to a given ID
  */
-function db_getCatName( $cat, $cid ){
+function db_getCatName( $cat ){
     global $ebm_user;
 	$res = db_exec( "SELECT cat FROM cats WHERE ( cid=? );", array( $cat ) );
     return $res[0]['cat'];
@@ -251,7 +251,7 @@ function db_searchEntries( $keyword, $name ){
     $res = db_exec( "SELECT cid, text, link FROM links WHERE text LIKE ? AND cid IN (SELECT cid FROM cats WHERE name=?) ORDER BY cid, text;", array( $keyword, $name ) );
     $rowid=0;
     foreach( $res as $row ) {
-		$entries[ $rowid ][ 'cat' ]=db_getCatName( $row['cid'], $cid );
+		$entries[ $rowid ][ 'cat' ]=db_getCatName( $row['cid'] );
         $entries[ $rowid ][ 'desc' ]=$row['text'];
 		$entries[ $rowid ][ 'link' ]=$row['link'];
         $rowid++;
