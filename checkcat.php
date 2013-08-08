@@ -51,7 +51,7 @@ echo "<hr>\n";
 // Open the master Table
 
 $actual=chop($ebm_category);
-$entries = db_getEntries($actual);
+$entries = getEntries($actual);
 
 echo "<center>\n";
 

@@ -18,13 +18,13 @@ echo "<DL><p>\n";
 /** Public bookmarks are suppressed for now **
 echo "    <DT><H3>Public Bookmarks</H3>\n";
 echo "    <DL><p>\n";
-$categories=db_getCategories();
+$categories=getCategories();
 sort($categories);
 foreach($categories as $actual){
   $actual=chop($actual);
   echo "        <DT><H3>$actual</H3>\n";
   echo "        <DL><p>\n";
-  $entries=db_getEntries($actual);
+  $entries=getEntries($actual);
   sort($entries);
   foreach($entries as $entry){
     echo "            <DT><A HREF=\"".$entry['link']."\">".$entry['desc']."</A>\n";
@@ -39,13 +39,13 @@ if(($ebm_user!="") && ($ebm_user!="ebm")){
   echo "    <HR>\n";
   echo "    <DT><H3>$ebm_user's Bookmarks</H3>\n";
   echo "    <DL><p>\n";
-  $categories=db_getCategories();
+  $categories=getCategories();
   sort($categories);
   foreach($categories as $actual){
     $actual=chop($actual);
     echo "        <DT><H3>$actual</H3>\n";
     echo "        <DL><p>\n";
-    $entries=db_getEntries($actual);
+    $entries=getEntries($actual);
     sort($entries);
     foreach($entries as $entry){
       echo "            <DT><A HREF=\"".$entry['link']."\">."$entry['desc']."</A>\n";

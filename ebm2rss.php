@@ -54,7 +54,7 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   }
 **/
 
-  $entries=db_getEntries($category);
+  $entries=getEntries($category);
   sort($entries);
   foreach($entries as $entry){
     echo "    <item>\n";

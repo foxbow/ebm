@@ -26,7 +26,7 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
 }
 
 $table=array();
-$entries=db_getEntries($category);
+$entries=getEntries($category);
 sort($entries);
 foreach($entries as $entry){
   $table[$entry['desc']]=$entry['link'];

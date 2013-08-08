@@ -70,7 +70,7 @@ require("header.php");
 echo "<a href=\"index.php\">Back</a>\n";
 
 if( $ebm_cmd == "vacuum" ){
-    db_cleanup();
+    dbcleanup();
     echo "<h2>Database clean</h2>\n";
 }
 
@@ -79,7 +79,7 @@ if( $ebm_cmd=="adduser" ){
 	echo "<h2>No username given!</h2>\n";
     }else if($ebm_pass == $ebm_pass2){
         $ebm_pass = md5( $ebm_pass );
-        db_addUser( $ebm_name, $ebm_pass );
+        addUser( $ebm_name, $ebm_pass );
     }else{
         echo "<h2>Password mismatch!</h2>\n";
     }
@@ -87,7 +87,7 @@ if( $ebm_cmd=="adduser" ){
 
 if( $ebm_cmd=="deluser" ){
     if( isset($ebm_name) ){
-        db_deleteUser( $ebm_name );
+        deleteUser( $ebm_name );
     }else{
         echo "<h2>No user to delete!</h2>\n";
     }
@@ -97,7 +97,7 @@ if( $ebm_cmd=="passwd" ){
     if( isset($ebm_name) ){
         if($ebm_pass == $ebm_pass2){
             $ebm_pass = md5( $ebm_pass );
-            db_updateUser( $ebm_name, $ebm_pass );
+            updateUser( $ebm_name, $ebm_pass );
         }else{
             echo "<h2>Password mismatch!</h2>\n";
         }
@@ -195,7 +195,7 @@ echo "</form>\n";
 }
 
 if($loguser=="ebm"){
-$users=db_getUsers();
+$users=getUsers();
 echo "<h3>Delete User</h3>\n";
 echo "<form action=\"admin.php\" method=\"post\">\n";
 echo "  <input type=\"hidden\" name=\"cmd\" value=\"deluser\">\n";

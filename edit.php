@@ -50,7 +50,7 @@ echo "<a href=\"index.php?category=$encat&amp;public=$ebm_public\"><b>Back to $e
 echo "<hr>\n";
 
 // get all categories
-$categories=db_getCategories();
+$categories=getCategories();
 // sort the categories
 sort($categories);
 
@@ -58,7 +58,7 @@ sort($categories);
 // Open the master Table
 
 $actual=chop($ebm_category);
-$entries = db_getEntries($actual);
+$entries = getEntries($actual);
 
 echo "<center>\n";
 

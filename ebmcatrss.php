@@ -28,7 +28,7 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   echo "      <description>Not allowed!</description>\n";
   echo "    </item>\n";
 }else{
-  $entries=db_getCategories();
+  $entries=getCategories();
   sort($entries);
   foreach($entries as $entry){
     $entry=chop($entry);
