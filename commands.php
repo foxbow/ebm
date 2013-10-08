@@ -511,15 +511,10 @@ function removeCat( $cat ){
      }
 }
 
-// Removal of entries
-function remove($cat, $link, $desc){
-     // $desc=makedesc($desc);
-     db_removeEntry( $cat, $link, $desc);
-}
 
 function removebyname( $cat, $desc ){
     $link=db_getLink( $cat, $desc );
-    remove( $cat, $link, $desc );
+    db_removeEntry( $cat, $link, $desc );
 }
 
 function movebyname($source, $desc, $target){

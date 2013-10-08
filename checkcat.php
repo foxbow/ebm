@@ -31,16 +31,15 @@ if(empty($ebm_cmd)){
 }
 if($ebm_cmd=="delete"){
     if( count( $ebm_name ) == 0 ){
-	echo "<li>Nothing to delete!</li>\n";
+		echo "<li>Nothing to delete!</li>\n";
     }else{
-	echo "Deleting:<ul>\n";
-	foreach( $ebm_name as $name ){
-	    removeByName( $ebm_category, $name );
-	    echo "<li>$name</li>\n";
-	}
-	echo "</ul>\n";
+		echo "Deleting:<ul>\n";
+		foreach( $ebm_name as $name ){
+		    removeByName( $ebm_category, $name );
+		    echo "<li>$name</li>\n";
+		}
+		echo "</ul>\n";
     }
-//    remove($ebm_file, $ebm_link, $ebm_line );
 }
 
 $encat=urlencode($ebm_category);
@@ -68,31 +67,24 @@ echo "  </tr>\n";
 $flag = true;
 $left = true;
 foreach($entries as $entry){
-    $entry=chop($entry);
     $name=$entry['desc'];
     $ebm_link=$entry['link'];
     if($flag) $rowcol="oddrow";
     else $rowcol="everow";
 
     echo "  <tr>\n";
-
-// Radiobutton
-//    echo "    <td class=\"$rowcol\" align=\"center\">\n";
-//    echo "      <input type=\"radio\" name=\"entry\" value=\"$entry\">\n";
-//    echo "    </td>\n";
-
 // Name and check
-    echo "    <td class=\"$rowcol\" align=\"left\">";
+    echo "    <td class='$rowcol' align='left'>";
     echo "<a href=\"$ebm_link\"";
-    if( $newwin == "on" ) echo " target=\"_blank\"";
+    if( $newwin == "on" ) echo " target='_blank'";
     echo ">$name</a></td>\n";
     $result = validate( $ebm_link );
 
-    echo "    <td class=\"$rowcol\" align=\"left\">";
+    echo "    <td class='$rowcol' align='left'>";
     echo "$result</td>\n";
 
 // Killbutton
-    echo "    <td><input type=\"checkbox\" name=\"name[]\" value=\"$name\"></td>\n";
+    echo "    <td><input type='checkbox' name='name[]' value=\"$name\"></td>\n";
     echo "  </tr>\n";
 
     $flag=!$flag;

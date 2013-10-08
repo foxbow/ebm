@@ -55,7 +55,7 @@ if($ebm_cmd=="newcat"){
     newcat($ebm_category);
 }
 if($ebm_cmd=="remove"){
-    remove($ebm_file, $ebm_link, $ebm_line );
+    db_removeEntry($ebm_file, $ebm_link, $ebm_line );
 }
 if($ebm_cmd=="delete"){
     removeCat($ebm_line);
