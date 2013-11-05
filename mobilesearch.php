@@ -8,6 +8,7 @@ if(!isset($ebm_user)) $ebm_user="PUBLIC";
 if(!isset($ebm_category)) $ebm_category=$defcat;
 if(!isset($ebm_title)) $ebm_title="EasyBookMarks";
 if(!isset($ebm_public)) $ebm_public="on";
+if(!isset($ebm_search)) $ebm_search="";
 
 $category=chop($ebm_category);
 
@@ -25,23 +26,36 @@ echo "</head><body>\n";
 if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   echo "<a href='$ebmurl/login.php?user=$ebm_user'&return='mobile.php'>Log in as $ebm_user first!</a>\n";
 }else{
-  echo "<a class='mobile' href='mobilecat.php'><b>$category</b></a><hr>\n";
   echo "<form class='mobile' action='mobilesearch.php' method='post'>\n";
-  echo "  <input name='search' type='text'>\n";
+  echo "  <input name='search' type='text' value='$ebm_search'>\n";
   echo "  <input type='hidden' name='public' value='$ebm_public'>\n";
   echo "  <input type='submit' value='search'>\n";
   echo "</form>\n";
-  $entries=getEntries($category);
-  sort($entries);
-  foreach($entries as $entry){
-    echo "  <a class='mobile' href='".$entry['link']."'>".$entry['desc']."</a>\n";
-  }
-
-  if( $ebm_user == "PUBLIC" ) {
-    echo "<hr><a class='mobile' href='$ebmurl/login.php?return=mobile.php'><b>Log in</b></a>\n";
+  echo "<hr>\n";
+  if( strlen( $ebm_search ) < 3 ) {
+    echo "<p>Too short!</p>\n";
   } else {
-    echo "<hr><a class='mobile' href='$ebmurl/logout.php?return=mobile.php'><b>Log out</b></a>\n";
+    if($ebm_user != "PUBLIC"){
+      echo "<a class='mobile' href='mobile.php'><b>$loguser</b></a>\n";
+	  printSearch($ebm_search, $loguser);
+    }
+    echo "<a class='mobile' href='mobilecat.php'><b>Public</b></a>\n";	
+    printSearch($ebm_search, "PUBLIC" );
+
+    if( $ebm_user == "PUBLIC" ) {
+      echo "<hr><a class='mobile' href='$ebmurl/login.php?return=mobile.php'><b>Log in</b></a>\n";
+    } else {
+      echo "<hr><a class='mobile' href='$ebmurl/logout.php?return=mobile.php'><b>Log out</b></a>\n";
+    }
   }
 }
 echo "</body></html>\n";
+
+function printSearch( $search, $user ) {
+	$entries = searchEntries( $search, $user );
+    sort($entries);
+    foreach($entries as $entry){
+      echo "  <a class='mobile' href='".$entry['link']."'>".$entry['desc']."</a>\n";
+    }
+}
 ?>	
