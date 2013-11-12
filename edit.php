@@ -30,7 +30,7 @@ if(empty($ebm_cmd)){
     $ebm_cmd="show";
 }
 if($ebm_cmd=="remove"){
-    remove($ebm_file, $ebm_link, $ebm_line );
+    db_removeEntry($ebm_file, $ebm_link, $ebm_line );
 }
 if($ebm_cmd=="update"){
     update($ebm_category, $ebm_oldlink, $ebm_oldline, $ebm_newlink, $ebm_newline );
