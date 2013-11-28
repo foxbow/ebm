@@ -384,33 +384,48 @@ function setSetting( $name, $value, $uname ){
  * Parses the source for a <title>...</title> pair
  **/
 function getTitle( $link ){
-     $fp = fopen( $link, 'r');
-     $line = "";
+	$fp = fopen( $link, 'r');
+	$line = "";
 
-     if( $fp ){
-          while (! feof ($fp)){
-                $line .= fgets ($fp, 1024);
-                if (stristr($line, '</title>' )){
-                     break;
-                }
-          }
+	$title = $link;	
 
-          if(feof($fp)){
-                $title = "No title tag!";
-          }else if (preg_match("#<title>(.*)</title>#", $line, $out)) {
-                // Get rid of newlines in the title as they will break
-                // the entry in the pt database!
-                $title = trim(strtr($out[1], "\n", " "));
-          }else{
-                $title = "No title set between title tags!";
-          }
+	// Get rid of the protocol (if any)
+	$pre = strpos( $link, "://" );
+	if( $pre !== false ) {
+		$title = substr( $title, $pre+3 );
+	}
 
-          fclose( $fp );
-     }else{
-          $title = "! $link unreachable !";
-     }
+	// get rid of www. (if any)
+	$pre = strpos( $link, "www." );
+	if( $pre !== false ) {
+		$title = substr( $link, $pre+4 );
+	}
 
-     return $title;
+	// No trailing slashes either
+	if( $title[ strlen( $title )-1 ] == "/" ) {
+		$title = substr( $title, 0, strlen( $title)-1 );
+
+	} 
+
+	// Is title set explicitly?
+	if( $fp ){
+		while (! feof ($fp)){
+			$line .= fgets ($fp, 1024);
+			if (stristr($line, '</title>' )){
+				if( preg_match( "#<title>(.*)</title>#", $line, $out ) ) {
+					// Get rid of newlines in the title as they will break
+					// the entry in the pt database!
+					$title = trim(strtr($out[1], "\n", " "));
+				}
+				break;
+			}
+		}
+		fclose( $fp );
+	}else{
+		$title = "! $title unreachable !";
+	}
+
+	return $title;
 }
 
 function validate( $link ){
