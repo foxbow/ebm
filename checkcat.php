@@ -15,7 +15,7 @@ require("setter.php");
 require("header.php");
 
 echo "<script>
-function checkit( link ) {
+function checkit( link, fieldid ) {
 var xmlhttp;
 if ( window.XMLHttpRequest ) {
   // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -27,7 +27,7 @@ if ( window.XMLHttpRequest ) {
 
 xmlhttp.onreadystatechange=function() {
   if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-    document.getElementById(link).innerHTML=xmlhttp.responseText;
+    document.getElementById(fieldid).innerHTML=xmlhttp.responseText;
   }
 }
 
@@ -88,6 +88,7 @@ echo "  </tr>\n";
 
 $flag = true;
 $left = true;
+$fid=0;
 foreach($entries as $entry){
     $name=$entry['desc'];
     $ebm_link=$entry['link'];
@@ -105,15 +106,16 @@ foreach($entries as $entry){
     echo "    <td class='$rowcol' align='left'>";
     echo "$result</td>\n";
 */
-    echo "    <td class='$rowcol' align='left' id=\"$ebm_link\">.. checking ..</td>\n";
+    echo "    <td class='$rowcol' align='left' id=\"field$fid\">.. checking ..</td>\n";
 //<div id="myDiv"><h2>Let AJAX change this text</h2></div>
 
 // Killbutton
     echo "    <td><input type='checkbox' name='name[]' value=\"$name\"></td>\n";
     echo "  </tr>\n";
-	echo "    <script>checkit(\"$ebm_link\");</script>\n";
+	echo "    <script>checkit(\"$ebm_link\", \"field$fid\");</script>\n";
 
     $flag=!$flag;
+	$fid++;
 }
 
 echo "  <tr>\n";
