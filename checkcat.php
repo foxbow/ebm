@@ -14,6 +14,28 @@ $loguser=currentUser(true);
 require("setter.php");
 require("header.php");
 
+echo "<script>
+function checkit( link ) {
+var xmlhttp;
+if ( window.XMLHttpRequest ) {
+  // code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+} else {
+  // code for IE6, IE5
+  xmlhttp=new ActiveXObject(\"Microsoft.XMLHTTP\");
+}
+
+xmlhttp.onreadystatechange=function() {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+    document.getElementById(link).innerHTML=xmlhttp.responseText;
+  }
+}
+
+xmlhttp.open(\"GET\",\"checklink.php?link=\"+link,true);
+xmlhttp.send();
+}
+</script>\n";
+
 if(empty($ebm_public)){
     $ebm_public="on";
 }
@@ -78,14 +100,18 @@ foreach($entries as $entry){
     echo "<a href=\"$ebm_link\"";
     if( $newwin == "on" ) echo " target='_blank'";
     echo ">$name</a></td>\n";
+/*
     $result = validate( $ebm_link );
-
     echo "    <td class='$rowcol' align='left'>";
     echo "$result</td>\n";
+*/
+    echo "    <td class='$rowcol' align='left' id=\"$ebm_link\">.. checking ..</td>\n";
+//<div id="myDiv"><h2>Let AJAX change this text</h2></div>
 
 // Killbutton
     echo "    <td><input type='checkbox' name='name[]' value=\"$name\"></td>\n";
     echo "  </tr>\n";
+	echo "    <script>checkit(\"$ebm_link\");</script>\n";
 
     $flag=!$flag;
 }
