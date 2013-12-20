@@ -1,11 +1,4 @@
 <?php
-// Make sure we won't run into naming conflicts
-if (isset($HTTP_HOST) && isset($SERVER_NAME) && ($HTTP_HOST != $SERVER_NAME)) {
-//    header("HTTP/1.0 301");
-    header("Location: http://".$SERVER_NAME.$PHP_SELF);
-    exit;
-}
-
 require("commands.php");
 
 $loguser=currentUser(true);
@@ -231,11 +224,11 @@ if($ebm_category!=""){
      echo "  <tr>\n";
      echo "    <td class='catlist' width='95%' colspan='$colspan'>\n";
      if ($showbrowse == "on")
-       echo "      <a class='flow' href='$ebmurl/ebmbrowse.php?user=$ebm_user&category=".urlencode($ebm_category)."'>Browse $ebm_category</a>\n";
+       echo "      <a class='flow' href='ebmbrowse.php?user=$ebm_user&category=".urlencode($ebm_category)."'>Browse $ebm_category</a>\n";
      else
        echo "      $ebm_category\n";
      if ($showval == "on")
-       echo "      (<a class='flow' href='$ebmurl/checkcat.php?public=$ebm_public&category=".urlencode($ebm_category)."'>check</a>)\n";
+       echo "      (<a class='flow' href='checkcat.php?public=$ebm_public&category=".urlencode($ebm_category)."'>check</a>)\n";
       
      if(($publicadd=="on")||($loguser!="")){
           $href = "edit.php?category=".urlencode($ebm_category)."&public=".urlencode($ebm_public);
@@ -243,9 +236,9 @@ if($ebm_category!=""){
      }
      if($showrss == "on"){
        if($ebm_user=="PUBLIC")
-         echo "      (<a class='flow' href='$ebmurl/ebm2rss.php?category=".urlencode($ebm_category)."'>rss</a>)\n";
+         echo "      (<a class='flow' href='ebm2rss.php?category=".urlencode($ebm_category)."'>rss</a>)\n";
        else 
-         echo "      (<a class='flow' href='$ebmurl/ebm2rss.php?user=$ebm_user&category=".urlencode($ebm_category)."'>rss</a>)\n";
+         echo "      (<a class='flow' href='ebm2rss.php?user=$ebm_user&category=".urlencode($ebm_category)."'>rss</a>)\n";
      }
      echo "    </td>\n";
      echo "  </tr>\n";

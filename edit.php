@@ -173,7 +173,7 @@ echo "  <tr>\n";
 // Close the master Table
 echo"</table>\n";
 
-echo "<a href=\"$ebmurl/checkcat.php?category=$ebm_category&public=$ebm_public\">";
+echo "<a href=\"checkcat.php?category=$ebm_category&public=$ebm_public\">";
 echo "Check Links</a>\n";
 $maxtime=count($entries)*10;
 echo "(&lt; $maxtime sec!)\n";

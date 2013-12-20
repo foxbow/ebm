@@ -31,8 +31,11 @@ error_reporting( E_ALL );
 // Find out where we are located
 $uripath=$_SERVER['PHP_SELF'];
 $uripath=substr($uripath, 0, strrpos($uripath, '/'));
-// @todo: what about https??
-$ebmurl="http://".$_SERVER['SERVER_NAME'].$uripath;
+if( isset ( $_SERVER['HTTPS'] ) && ( $_SERVER['HTTPS'] != "" ) ) {
+	$ebmurl="https://".$_SERVER['SERVER_NAME'].$uripath;
+} else {
+	$ebmurl="http://".$_SERVER['SERVER_NAME'].$uripath;
+}
 
 /**
  * SQL wrapper to do error checking and transactions automatically

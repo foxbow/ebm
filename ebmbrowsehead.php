@@ -13,7 +13,7 @@ else{
     $ebm_user=urlencode($ebm_user);
     $next=urlencode($ebm_next);
     $ebm_category=urlencode($ebm_category);
-    echo "<a href=\"$ebmurl/ebmbrowse.php?current=$next&category=$ebm_category&user=$ebm_user\" target=\"_top\">$ebm_next</a>";
+    echo "<a href=\"ebmbrowse.php?current=$next&category=$ebm_category&user=$ebm_user\" target=\"_top\">$ebm_next</a>";
 /*
     if($killbutton=="on"){
 	echo "      <form action=\"ebmbrowse.php\" method=\"post\">\n";

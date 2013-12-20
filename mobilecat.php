@@ -21,7 +21,7 @@ echo "  <link rel='SHORTCUT ICON' href='favicon.ico'>\n";
 echo "</head><body>\n";
 
 if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
-  echo "<a href='$ebmurl/login.php?user=$ebm_user'&return='mobilecat.php'>Log in as $ebm_user first!</a>\n";
+  echo "<a href='login.php?user=$ebm_user'&return='mobilecat.php'>Log in as $ebm_user first!</a>\n";
 }else{
   $entries=getCategories();
   sort($entries);
@@ -29,9 +29,9 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
     echo "  <a class='mobile' href='mobile.php?category=$entry'>".$entry."</a>\n";
   }
   if( $ebm_user == "PUBLIC" ) {
-    echo "<hr><a class='mobile' href='$ebmurl/login.php?return=mobilecat.php'><b>Log in</b></a>\n";
+    echo "<hr><a class='mobile' href='login.php?return=mobilecat.php'><b>Log in</b></a>\n";
   } else {
-    echo "<hr><a class='mobile' href='$ebmurl/logout.php?return=mobilecat.php'><b>Log out</b></a>\n";
+    echo "<hr><a class='mobile' href='logout.php?return=mobilecat.php'><b>Log out</b></a>\n";
   }
 }
 echo "</body></html>\n";

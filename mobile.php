@@ -23,7 +23,7 @@ echo "  <link rel='SHORTCUT ICON' href='favicon.ico'>\n";
 echo "</head><body>\n";
 
 if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
-  echo "<a href='$ebmurl/login.php?user=$ebm_user'&return='mobile.php'>Log in as $ebm_user first!</a>\n";
+  echo "<a href='login.php?user=$ebm_user'&return='mobile.php'>Log in as $ebm_user first!</a>\n";
 }else{
   echo "<a class='mobile' href='mobilecat.php'><b>$category</b></a><hr>\n";
   echo "<form class='mobile' action='mobilesearch.php' method='post'>\n";
@@ -38,9 +38,9 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   }
 
   if( $ebm_user == "PUBLIC" ) {
-    echo "<hr><a class='mobile' href='$ebmurl/login.php?return=mobile.php'><b>Log in</b></a>\n";
+    echo "<hr><a class='mobile' href='login.php?return=mobile.php'><b>Log in</b></a>\n";
   } else {
-    echo "<hr><a class='mobile' href='$ebmurl/logout.php?return=mobile.php'><b>Log out</b></a>\n";
+    echo "<hr><a class='mobile' href='logout.php?return=mobile.php'><b>Log out</b></a>\n";
   }
 }
 echo "</body></html>\n";

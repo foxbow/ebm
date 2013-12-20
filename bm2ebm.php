@@ -50,7 +50,7 @@ echo "Done.<br>&nbsp;<br>\n";
 
 unlink($filename);
 
-echo "\n<a href=\"$ebmurl/index.php?public=off\">Main</a><br>\n";
+echo "\n<a href=\"index.php?public=off\">Main</a><br>\n";
 
 require("footer.php");
 ?>	

@@ -15,11 +15,11 @@ if(!isset($ebm_current)) $ebm_current="";
 if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   echo "<html>\n";
   echo "  <head>\n";
-  echo "    <meta http-equiv=\"refresh\" content=\"0; URL=$ebmurl/login.php?user=$ebm_user\">\n";
+  echo "    <meta http-equiv=\"refresh\" content=\"0; URL=login.php?user=$ebm_user\">\n";
   echo "    <title>EBM Forwarder</title>\n";
   echo "  </head><body>\n";
   echo "    Ooops, this browser seems incapable of forwarding!<br>\n";
-  echo "    Please log in as <a href='$ebmurl/login.php?user=$ebm_user'>$ebm_user</a>.\n";
+  echo "    Please log in as <a href='login.php?user=$ebm_user'>$ebm_user</a>.\n";
   echo "  </body>\n";
   echo "</html>\n";
   exit;
@@ -64,7 +64,7 @@ $next=urlencode($next);
 $ebm_category=urlencode($ebm_category);
 
 echo "<frameset rows=\"30px,*\">\n";
-echo "  <frame src=\"$ebmurl/ebmbrowsehead.php?next=$next&user=$ebm_user&category=$ebm_category\">\n";
+echo "  <frame src=\"ebmbrowsehead.php?next=$next&user=$ebm_user&category=$ebm_category\">\n";
 echo "  <frame src=\"$curlink\">\n";
 echo "  <noframes>\n";
 echo "    <body><h1>Sorry, I need frames for this feature</h1></body>\n";

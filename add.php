@@ -1,11 +1,4 @@
 <?php
-// Make sure we won't run into naming conflicts
-if (isset($HTTP_HOST) && isset($SERVER_NAME) && ($HTTP_HOST != $SERVER_NAME)) {
-//    header("HTTP/1.0 301");
-    header("Location: http://".$SERVER_NAME.$PHP_SELF);
-    exit;
-}
-
 require("commands.php");
 $loguser=currentUser(true);
 require("setter.php");

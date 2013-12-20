@@ -31,20 +31,20 @@ echo "<table class='header' cellpadding='1' border='0' width='98%'>\n";
  */
 echo "  <tr><td class='header' width='20%'>\n";
 if($ebm_public=="off"){
-    echo "      <a href='$ebmurl/index.php?public=on'>Public links</a>\n";
+    echo "      <a href='index.php?public=on'>Public links</a>\n";
 }else{
     if($loguser==""){
-        echo "      <a href='$ebmurl/login.php'>Login</a>\n";
+        echo "      <a href='login.php'>Login</a>\n";
     }else if( $loguser=="ebm" ){
-        echo "      <a href='$ebmurl/admin.php'>Admin</a>\n";
+        echo "      <a href='admin.php'>Admin</a>\n";
     }else{
-        echo "      <a href='$ebmurl/index.php?public=off'>$loguser's links</a>\n";
+        echo "      <a href='index.php?public=off'>$loguser's links</a>\n";
     }
 }
 echo "  </td>\n";
 
 echo "  <td class='header' width='20%'>\n";
-echo "    <a href='$ebmurl/logout.php'>Logout</a>\n";
+echo "    <a href='logout.php'>Logout</a>\n";
 echo "  </td>\n";
 if($quicksearch=="on"){
      echo "  <td class='header' style='white-space:nowrap;'>\n";
@@ -93,7 +93,7 @@ echo "</table>\n\n";
 echo "</center>\n";
 
 echo "\n<p style='margin:20px;'></p>\n";
-echo "<a class='flow' href='$ebmurl/index.php'>Back</a>\n";
+echo "<a class='flow' href='index.php'>Back</a>\n";
 echo "\n<p style='margin:20px;'></p>\n";
 
 require("footer.php");
