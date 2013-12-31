@@ -18,7 +18,7 @@ require("header.php");
 $ebm_search=strtolower($ebm_search);
 
 if(isset($ebm_cmd) && $ebm_cmd=="remove"){
-    remove($ebm_file, $ebm_link, $ebm_line );
+    db_removeEntry($ebm_file, $ebm_link, $ebm_line );
 }
 
 echo "<h1>Searchresults for $ebm_search</h1>\n";
