@@ -11,7 +11,6 @@ if(!file_exists("settings.php")){
      require("footer.php");
      exit;
 }
-
 require_once( "settings.php" );
 
 // Get the values that can't be overridden by user
@@ -25,7 +24,10 @@ if (!isset( $settings_loaded ) || ( $settings_loaded == "off" ) ) {
     $motd          = getSetting("motd", "", "ebm" );
 }
 
-extract($_REQUEST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
+// extract($_REQUEST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
+extract($_GET, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
+extract($_POST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
+
 error_reporting( E_ALL );
 
 // Find out where we are located
@@ -200,10 +202,10 @@ function db_renCat( $cat, $ncat ){
 
 /**
  * returns the id for a given category name
+ * $loguser is mandatory in case public links are required
  */
-function db_getCatID( $cat ){
-    global $ebm_user;	
-	$catid=db_exec( "SELECT cid FROM cats WHERE ( name=? AND cat=? );", array( $ebm_user, $cat ) );
+function db_getCatID( $cat, $loguser ){
+	$catid=db_exec( "SELECT cid FROM cats WHERE ( name=? AND cat=? );", array( $loguser, $cat ) );
     return $catid[0]['cid'];
 }
 
@@ -211,7 +213,6 @@ function db_getCatID( $cat ){
  * returns the category name to a given ID
  */
 function db_getCatName( $cat ){
-    global $ebm_user;
 	$res = db_exec( "SELECT cat FROM cats WHERE ( cid=? );", array( $cat ) );
     return $res[0]['cat'];
 }
@@ -219,8 +220,11 @@ function db_getCatName( $cat ){
 /**
  * returns all entries of a category
  **/
-function getEntries( $cat ){
-    $catid = db_getCatID( $cat );
+function getEntries( $cat, $loguser="" ){
+	global $ebm_user;
+	if( $loguser == "" ) $loguser=$ebm_user;
+
+    $catid = db_getCatID( $cat, $loguser );
     $entries=array();
     if(empty($catid)) return $entries;
     $res = db_exec( "SELECT text, link FROM links WHERE cid=? ORDER BY text;", array( $catid ) );
@@ -306,35 +310,37 @@ function db_moveEntry($source, $link, $desc, $target){
  * If no user is valid and $login is set to true, the user will be
  * forced to login, otherwise an empty string is returned.
  */
-function currentUser($login){
-    global $forcelogin, $ebm_user, $ebm_pass, $rssforce;
+function currentUser( $login )
+{
+    global $forcelogin, $ebm_user;
     $loguser="";
     $password="";
-    if (isset($_COOKIE["user"]) || ($rssforce != "") ) {
-	if ($rssforce!=""){
-	    $loguser=$ebm_user;
-	    $password=md5(chop($ebm_pass));
-	}else{
+
+	// PUBLIC is always valid
+	if( $ebm_user == "PUBLIC" ) return $ebm_user;
+
+    if ( isset($_COOKIE["user"]) ) 
+	{
 	    $loguser = $_COOKIE["user"];
 	    $password = $_COOKIE["pass"];
-	}
-	if( checkpass( $loguser, $password )!=1 ){
-	    $loguser="";
-	    if($login === true){
-		//      header("HTTP/1.0 301");
-		header("Location: login.php");
-		echo "<a href=\"login.php\">Cookie failure - Please log in again!</a>\n";
-		exit;
-	    }
-	}
+
+		if( checkpass( $loguser, $password )!=1 ){
+		    $loguser="";
+		    if($login === true){
+				header("Location: login.php");
+				echo "<a href=\"login.php?user=$ebm_user\">Cookie failure - Please log in again!</a>\n";
+				exit;
+		    }
+		}
     }else{
-	$loguser = "";
-	if(($forcelogin=="on") && ($login === true)){
-	    header("Location: login.php");
-	    echo "<a href=\"login.php\">Please log in first!</a>\n";
-	    exit;
-	}
+		$loguser = "";
+		if(($forcelogin=="on") && ($login === true)){
+		    header("Location: login.php");
+		    echo "<a href=\"login.php?user=$ebm_user\">Please log in first!</a>\n";
+		    exit;
+		}
     }
+
     return $loguser;
 }
 
