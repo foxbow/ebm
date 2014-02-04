@@ -184,9 +184,8 @@ function db_newCat( $cat ){
 /**
  * deletes a category
  **/
-function db_removeCat( $cat ){
-    global $ebm_user;
-    $catid = db_getCatID( $cat );
+function db_removeCat( $cat, $loguser="" ){
+    $catid = db_getCatID( $cat, $loguser );
 	db_exec( "DELETE FROM links WHERE ( cid=? );", array( $catid ) );
 	db_exec( "DELETE FROM cats WHERE ( cid=? );", array( $catid ) );
 }
@@ -205,6 +204,9 @@ function db_renCat( $cat, $ncat ){
  * $loguser is mandatory in case public links are required
  */
 function db_getCatID( $cat, $loguser ){
+    global $ebm_user;
+	if( $loguser == "" ) $loguser=$ebm_user;
+
 	$catid=db_exec( "SELECT cid FROM cats WHERE ( name=? AND cat=? );", array( $loguser, $cat ) );
     return $catid[0]['cid'];
 }
@@ -221,9 +223,6 @@ function db_getCatName( $cat ){
  * returns all entries of a category
  **/
 function getEntries( $cat, $loguser="" ){
-	global $ebm_user;
-	if( $loguser == "" ) $loguser=$ebm_user;
-
     $catid = db_getCatID( $cat, $loguser );
     $entries=array();
     if(empty($catid)) return $entries;
@@ -259,8 +258,8 @@ function searchEntries( $keyword, $name ){
 /**
  * append an entry
  **/
-function db_appendEntry($cat, $link, $desc){
-    $catid = db_getCatID( $cat );
+function db_appendEntry($cat, $link, $desc, $loguser="" ){
+    $catid = db_getCatID( $cat, $loguser );
 	db_exec( "INSERT OR IGNORE INTO links ( cid, link, text ) VALUES ( ?, ?, ? );", 
 		array( $catid, $link, $desc ) );
 }
@@ -268,8 +267,8 @@ function db_appendEntry($cat, $link, $desc){
 /**
  * get an entry by description
  **/
-function db_getLink($cat, $desc){
-    $catid = db_getCatID( $cat );
+function db_getLink($cat, $desc, $loguser="" ){
+    $catid = db_getCatID( $cat, $loguser );
 	$row=db_exec( "SELECT link FROM links WHERE ( cid=? AND text=? );", 
 		array( $catid, $desc ) );
 	if( empty( $row ) ) return "";
@@ -279,8 +278,8 @@ function db_getLink($cat, $desc){
 /**
  * delete an entry
  **/
-function db_removeEntry($cat, $link, $desc){
-    $catid = db_getCatID( $cat );
+function db_removeEntry($cat, $link, $desc, $loguser="" ){
+    $catid = db_getCatID( $cat, $loguser );
 	db_exec( "DELETE FROM links WHERE ( cid=? AND link=? AND text=? );", 
 		array( $catid, $link, $desc ) );
 }
@@ -288,8 +287,8 @@ function db_removeEntry($cat, $link, $desc){
 /**
  * change an existing entry into a new one.
  **/
-function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc){
-    $catid = db_getCatID( $cat );
+function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc, $loguser="" ){
+    $catid = db_getCatID( $cat, $loguser );
 	db_exec( "UPDATE OR IGNORE links SET link=?,text=? WHERE ( cid=? AND link=? AND text=? );", 
 		array( $nlink, $ndesc, $catid, $olink, $odesc ) );
 }
@@ -297,9 +296,9 @@ function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc){
 /**
  * Move an entry from one category to another
  **/
-function db_moveEntry($source, $link, $desc, $target){
-    $scatid = db_getCatID( $source );
-    $tcatid = db_getCatID( $target );
+function db_moveEntry($source, $link, $desc, $target, $loguser=""){
+    $scatid = db_getCatID( $source, $loguser );
+    $tcatid = db_getCatID( $target, $loguser );
     db_exec( "UPDATE OR IGNORE links SET cid=? WHERE ( cid=? AND link=? AND text=? );", 
 		array( $tcatid, $scatid, $link, $desc ) );
 }
