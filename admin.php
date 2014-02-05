@@ -2,7 +2,7 @@
 require("commands.php");
 
 $loguser=currentUser(true);
-if($loguser==""){
+if($loguser=="PUBLIC"){
     header ("Location: docs.html");
     exit;
 }
@@ -34,9 +34,6 @@ if( $ebm_cmd == "set" ){
     if( !isset( $ebm_defcat ) ) $ebm_defcat="";
     if( $defcat != $ebm_defcat )
       $defcat = setSetting( "defcat", $ebm_defcat, $loguser );
-    if( !isset( $ebm_allowshortcut ) ) $ebm_allowshortcut="off";
-    if( $allowshortcut != $ebm_allowshortcut )
-      $allowshortcut = setSetting( "allowshortcut", $ebm_allowshortcut, $loguser );
     if( !isset( $ebm_killbutton ) ) $ebm_killbutton="off";
     if( $killbutton != $ebm_killbutton )
       $killbutton = setSetting( "killbutton", $ebm_killbutton, $loguser );
@@ -49,9 +46,6 @@ if( $ebm_cmd == "set" ){
     if( !isset( $ebm_cssfile ) ) $ebm_cssfile = "ebm.css";
     if( $cssfile != $ebm_cssfile )
       $cssfile = setSetting( "cssfile", $ebm_cssfile, $loguser );
-    if( !isset( $ebm_jumptopriv ) ) $ebm_jumptopriv = "off";
-    if( $jumptopriv != $ebm_jumptopriv )
-      $jumptopriv = setSetting( "jumptopriv", $ebm_jumptopriv, $loguser );
     if( !isset( $ebm_toedit ) ) $ebm_toedit = "off";
     if( $toedit != $ebm_toedit )
       $toedit = setSetting( "toedit", $ebm_toedit, $loguser );
@@ -136,7 +130,6 @@ if($loguser=="ebm"){
     lazyCheck("Add/edit without login", "publicadd", $publicadd);
     lazyText ("Message of the day", "motd", $motd );
 }
-lazyCheck("Shortcut button", "allowshortcut", $allowshortcut);
 lazyCheck("Kill button", "killbutton", $killbutton);
 lazyCheck("Open links in new window", "newwin", $newwin);
 if($loguser=="ebm"){
@@ -144,7 +137,6 @@ if($loguser=="ebm"){
     lazyCheck("Force login", "forcelogin", $forcelogin);
     lazyText("Days for cookie to be valid", "days", $days );
 }
-lazyCheck("Jump to private categories after login", "jumptopriv", $jumptopriv);
 lazyCheck("Show search field", "quicksearch", $quicksearch);
 lazyCheck("Jump to edit page in livebookmarks", "toedit", $toedit);
 lazyCheck("Show Browse link in title", "showbrowse", $showbrowse);

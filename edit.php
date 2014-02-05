@@ -14,39 +14,31 @@ $loguser=currentUser(true);
 require("setter.php");
 require("header.php");
 
-if(empty($ebm_public)){
-    $ebm_public="on";
-}
-if($ebm_public=="off"){
-    $ebm_user = $loguser;
-}else{
-    $ebm_user = "PUBLIC";
-}
-
 echo "<h1>Edit $ebm_category</h1>\n";
 echo "<hr>\n";
+
+//    echo "cmd=$ebm_cmd / file=$ebm_file / link=$ebm_link / line=$ebm_line / cat=$ebm_category / user=$ebm_user<br>\n";
 
 if(empty($ebm_cmd)){
     $ebm_cmd="show";
 }
 if($ebm_cmd=="remove"){
-    db_removeEntry($ebm_file, $ebm_link, $ebm_line );
+    db_removeEntry($ebm_file, $ebm_link, $ebm_line, $ebm_user );
 }
 if($ebm_cmd=="update"){
-    update($ebm_category, $ebm_oldlink, $ebm_oldline, $ebm_newlink, $ebm_newline );
+    update($ebm_category, $ebm_oldlink, $ebm_oldline, $ebm_newlink, $ebm_newline, $ebm_user );
 }
 
 if($ebm_cmd=="rencat"){
-    $ebm_category=renCat($ebm_category, $ebm_newcat);
+    $ebm_category=renCat($ebm_category, $ebm_newcat, $ebm_user);
 }
 
-//    echo "cmd=$ebm_cmd / file=$ebm_file / link=$ebm_link / line=$ebm_line / cat=$ebm_category / public=$ebm_public<br>\n";
 if($ebm_cmd=="move"){
-    movebyname($ebm_category, $ebm_line, $ebm_file);
+    movebyname($ebm_category, $ebm_line, $ebm_file, $ebm_user);
 }
 
 $encat=urlencode($ebm_category);
-echo "<a href=\"index.php?category=$encat&amp;public=$ebm_public\"><b>Back to $ebm_category</b></a>\n";
+echo "<a href=\"index.php?category=$encat&amp;name=$ebm_user\"><b>Back to $ebm_category</b></a>\n";
 echo "<hr>\n";
 
 // get all categories
@@ -58,7 +50,7 @@ sort($categories);
 // Open the master Table
 
 $actual=chop($ebm_category);
-$entries = getEntries($actual);
+$entries = getEntries( $actual, $ebm_user );
 
 echo "<center>\n";
 
@@ -66,7 +58,7 @@ echo "<table class=\"links\" cellpadding=\"1\" border=\"0\">\n";
 echo "  <tr>\n";
 echo "    <td class=\"catlist\" width=\"95%\" colspan=\"3\">\n";
 echo "      <form action=\"$myname\" method=\"post\">\n";
-echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
+echo "        <input type=\"hidden\" name=\"user\" value=\"$ebm_user\">\n";
 echo "        <input type=\"hidden\" name=\"cmd\" value=\"rencat\">\n";
 echo "        <input type=\"hidden\" name=\"category\" value=\"$actual\">\n";
 echo "        <input type=\"text\" size=\"16\" name=\"newcat\" value=\"$actual\">\n";
@@ -76,7 +68,7 @@ echo "    </td>\n";
 
 echo "    <td class=\"catlist\">\n";
 echo "      <form action=\"index.php\" method=\"post\">\n";
-echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
+echo "        <input type=\"hidden\" name=\"user\" value=\"$ebm_user\">\n";
 echo "        <input type=\"hidden\" name=\"cmd\" value=\"delete\">\n";
 echo "        <input type=\"hidden\" name=\"line\" value=\"$actual\">\n";
 echo "        <input type=\"image\" src=\"kill.gif\">\n";
@@ -96,7 +88,7 @@ echo "    <td colspan=\"4\" class=\"catlist\">\n";
 echo "      <form action=\"$myname\" method=\"post\">\n";
 echo "      Move\n";
 echo "        <input type=\"hidden\" name=\"category\" value=\"$actual\">\n";
-echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
+echo "        <input type=\"hidden\" name=\"user\" value=\"$ebm_user\">\n";
 echo "        <select name=\"line\">\n";
 foreach($entries as $entry){
     echo "          <option>".$entry['desc']."</option>\n";
@@ -132,7 +124,7 @@ foreach($entries as $entry){
 // Name and link
     echo "    <td class=\"$rowcol\" align=\"left\">\n";
     echo "      <form action=\"$myname\" method=\"post\">\n";
-    echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
+    echo "        <input type=\"hidden\" name=\"user\" value=\"$ebm_user\">\n";
     echo "        <input type=\"hidden\" name=\"cmd\" value=\"update\">\n";
     echo "        <input type=\"hidden\" name=\"oldlink\" value=\"$ebm_link\">\n";
     echo "        <input type=\"hidden\" name=\"oldline\" value=\"$name\">\n";
@@ -146,7 +138,7 @@ foreach($entries as $entry){
 // Killbutton
     echo "    <td class=\"$rowcol\" align=\"center\">\n";
     echo "      <form action=\"$myname\" method=\"post\">\n";
-    echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
+    echo "        <input type=\"hidden\" name=\"user\" value=\"$ebm_user\">\n";
     echo "        <input type=\"hidden\" name=\"cmd\" value=\"remove\">\n";
     echo "        <input type=\"hidden\" name=\"file\" value=\"$actual\">\n";
     echo "        <input type=\"hidden\" name=\"link\" value=\"$ebm_link\">\n";
@@ -173,7 +165,7 @@ echo "  <tr>\n";
 // Close the master Table
 echo"</table>\n";
 
-echo "<a href=\"checkcat.php?category=$ebm_category&public=$ebm_public\">";
+echo "<a href=\"checkcat.php?category=$ebm_category&user=$ebm_user\">";
 echo "Check Links</a>\n";
 $maxtime=count($entries)*10;
 echo "(&lt; $maxtime sec!)\n";
@@ -183,7 +175,7 @@ echo "</center>\n";
 /*****************************************************************************/
 
 echo "<hr>\n";
-echo "<a href=\"index.php?category=$encat&public=$ebm_public\"><b>Back to $ebm_category</b></a>\n";
+echo "<a href=\"index.php?category=$encat&user=$ebm_user\"><b>Back to $ebm_category</b></a>\n";
 
 require("footer.php");
 ?>

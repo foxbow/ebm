@@ -4,10 +4,8 @@ require("commands.php");
 $loguser=currentUser(false);
 require("setter.php");
 
-if(!isset($ebm_user)) $ebm_user="PUBLIC";
 if(!isset($ebm_category)) $ebm_category=$defcat;
 if(!isset($ebm_title)) $ebm_title="EasyBookMarks";
-if(!isset($ebm_public)) $ebm_public="on";
 
 echo "<!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'\n";
 echo "    'http://www.w3.org/TR/html4/loose.dtd'>\n";

@@ -4,10 +4,8 @@ require("commands.php");
 $loguser=currentUser(false);
 require("setter.php");
 
-if(!isset($ebm_user)) $ebm_user="PUBLIC";
 if(!isset($ebm_category)) $ebm_category=$defcat;
 if(!isset($ebm_title)) $ebm_title="EasyBookMarks";
-if(!isset($ebm_public)) $ebm_public="on";
 if(!isset($ebm_search)) $ebm_search="";
 
 $category=chop($ebm_category);
@@ -28,7 +26,6 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
 }else{
   echo "<form class='mobile' action='mobilesearch.php' method='post'>\n";
   echo "  <input name='search' type='text' value='$ebm_search'>\n";
-  echo "  <input type='hidden' name='public' value='$ebm_public'>\n";
   echo "  <input type='submit' value='search'>\n";
   echo "</form>\n";
   echo "<hr>\n";

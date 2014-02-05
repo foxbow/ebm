@@ -27,7 +27,7 @@ foreach( $data as $dataline ){
     array_push( $stack, $category );
     $category=parseline( $dataline, "<H3", ">", "</H3>" );
     $category=strtr( $category, "&", "+" );
-    newCat( $category );
+    newCat( $category, $ebm_user );
     echo "Import <b>$category</b><br>\n";      
   }
 
@@ -41,7 +41,7 @@ foreach( $data as $dataline ){
     if((strpos($link,"http")!==false)&&(strpos($link, "http" )==0)){
       $line=parseline( $dataline, "<A HREF=", ">", "</A>" );
       // echo "<b>$category</b> <i>$line</i><br>\n$link<br>\n";
-      append( $category, $link, $line );
+      append( $category, $link, $line, $ebm_user );
     }
   }
 }
@@ -50,7 +50,7 @@ echo "Done.<br>&nbsp;<br>\n";
 
 unlink($filename);
 
-echo "\n<a href=\"index.php?public=off\">Main</a><br>\n";
+echo "\n<a href=\"index.php?user=$ebm_user\">Main</a><br>\n";
 
 require("footer.php");
 ?>	

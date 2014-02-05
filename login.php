@@ -1,11 +1,7 @@
 <?php
 require("commands.php");
 
-if( !isset($ebm_user) ) $ebm_user="";
-$ebm_user = chop($ebm_user);
-
 if( !isset($ebm_return) || $ebm_return=="" ) $ebm_return="index.php";
-
 
 if( !isset($ebm_persist) ) $ebm_persist="off";
 
@@ -21,19 +17,14 @@ if( isset($ebm_pass) ){
 	    setcookie( "user", "$ebm_user" );
 	    setcookie( "pass", "$ebm_pass" );
 	}      // header("HTTP/1.0 301");
-	$header="Location: $ebm_return";
-	
-	if( getSetting("jumptopriv", "off", $ebm_user)  == "on" ){
-	    $header=$header."?public=off";
-	    if( isset($ebm_category) ) $header=$header."&category=$ebm_category";
-	}else if( isset($ebm_category) ) $header=$header."?category=$ebm_category";
+	$header="Location: $ebm_return?user=$ebm_user";
+    if( isset($ebm_category) ) $header=$header."&category=$ebm_category";
 	header( $header );
 	exit;
     }
 }
 
 require("setter.php");
-
 require("header.php");
 
 echo "<h1>Log into Easybookmarks</h1>\n";

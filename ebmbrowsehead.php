@@ -5,7 +5,6 @@ require "header.php";
 echo "  <center><b>";
 
 if(!isset($ebm_category)) $ebm_category=$defcat;
-if(!isset($ebm_user)) $ebm_user="PUBLIC";
 if(!isset($ebm_next)) $ebm_next="";
 
 if ($ebm_next=="") echo "Done.";
@@ -17,7 +16,7 @@ else{
 /*
     if($killbutton=="on"){
 	echo "      <form action=\"ebmbrowse.php\" method=\"post\">\n";
-	echo "        <input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
+	echo "        <input type=\"hidden\" name=\"user\" value=\"$ebm_user\">\n";
 	echo "        <input type=\"hidden\" name=\"cmd\" value=\"remove\">\n";
 	echo "        <input type=\"hidden\" name=\"file\" value=\"$ebm_category\">\n";
 	echo "        <input type=\"hidden\" name=\"line\" value=\"$name\">\n";

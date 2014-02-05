@@ -1,5 +1,6 @@
 <?PHP
-$version="3.0beta5";
+$version="3.1a";
+error_reporting( E_ALL );
 
 if(!file_exists("settings.php")){
      require("header.php");
@@ -27,8 +28,6 @@ if (!isset( $settings_loaded ) || ( $settings_loaded == "off" ) ) {
 // extract($_REQUEST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
 extract($_GET, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
 extract($_POST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
-
-error_reporting( E_ALL );
 
 // Find out where we are located
 $uripath=$_SERVER['PHP_SELF'];
@@ -152,9 +151,8 @@ function getUsers(){
 /*
  * returns an array containing all categories
  */
-function getCategories(){
-    global $ebm_user;
-	$ret=db_exec( "SELECT cat FROM cats WHERE name=?;", array( $ebm_user ) );
+function getCategories( $user ){
+	$ret=db_exec( "SELECT cat FROM cats WHERE name=?;", array( $user ) );
     $category = array();
     $i = 0;
     foreach( $ret as $row ) {
@@ -168,8 +166,7 @@ function getCategories(){
 /**
  * Creates a new category and sets a new catid
  **/
-function db_newCat( $cat ){
-    global $ebm_user;
+function db_newCat( $cat, $user ){
     $cid = db_openDB();
 	$res = $cid->query( "SELECT MAX(cid) FROM cats;" );
 	$val = 0;
@@ -178,14 +175,14 @@ function db_newCat( $cat ){
 	}
 	$val=$val+1;
 	db_exec( "INSERT OR IGNORE INTO cats ( name, cat, cid ) VALUES ( ?, ?, ? );",
-		array( $ebm_user, $cat, $val ) );
+		array( $user, $cat, $val ) );
 }
 
 /**
  * deletes a category
  **/
-function db_removeCat( $cat, $loguser="" ){
-    $catid = db_getCatID( $cat, $loguser );
+function db_removeCat( $cat, $user ){
+    $catid = db_getCatID( $cat, $user );
 	db_exec( "DELETE FROM links WHERE ( cid=? );", array( $catid ) );
 	db_exec( "DELETE FROM cats WHERE ( cid=? );", array( $catid ) );
 }
@@ -193,26 +190,23 @@ function db_removeCat( $cat, $loguser="" ){
 /**
  * rename a category
  **/
-function db_renCat( $cat, $ncat ){
-    global $ebm_user;
+function db_renCat( $cat, $ncat, $user ){
 	db_exec( "UPDATE cats SET cat=? WHERE ( name=? and cat=? );",
-		array( $ncat, $ebm_user, $cat ) );
+		array( $ncat, $user, $cat ) );
 }
 
 /**
  * returns the id for a given category name
- * $loguser is mandatory in case public links are required
+ * $user is mandatory in case public links are required
  */
-function db_getCatID( $cat, $loguser ){
-    global $ebm_user;
-	if( $loguser == "" ) $loguser=$ebm_user;
-
-	$catid=db_exec( "SELECT cid FROM cats WHERE ( name=? AND cat=? );", array( $loguser, $cat ) );
+function db_getCatID( $cat, $user ){
+	$catid=db_exec( "SELECT cid FROM cats WHERE ( name=? AND cat=? );", array( $user, $cat ) );
     return $catid[0]['cid'];
 }
 
 /**
  * returns the category name to a given ID
+ * catids are global, so no user is needed!
  */
 function db_getCatName( $cat ){
 	$res = db_exec( "SELECT cat FROM cats WHERE ( cid=? );", array( $cat ) );
@@ -222,8 +216,8 @@ function db_getCatName( $cat ){
 /**
  * returns all entries of a category
  **/
-function getEntries( $cat, $loguser="" ){
-    $catid = db_getCatID( $cat, $loguser );
+function getEntries( $cat, $user ){
+    $catid = db_getCatID( $cat, $user );
     $entries=array();
     if(empty($catid)) return $entries;
     $res = db_exec( "SELECT text, link FROM links WHERE cid=? ORDER BY text;", array( $catid ) );
@@ -258,8 +252,8 @@ function searchEntries( $keyword, $name ){
 /**
  * append an entry
  **/
-function db_appendEntry($cat, $link, $desc, $loguser="" ){
-    $catid = db_getCatID( $cat, $loguser );
+function db_appendEntry($cat, $link, $desc, $user ){
+    $catid = db_getCatID( $cat, $user );
 	db_exec( "INSERT OR IGNORE INTO links ( cid, link, text ) VALUES ( ?, ?, ? );", 
 		array( $catid, $link, $desc ) );
 }
@@ -267,8 +261,8 @@ function db_appendEntry($cat, $link, $desc, $loguser="" ){
 /**
  * get an entry by description
  **/
-function db_getLink($cat, $desc, $loguser="" ){
-    $catid = db_getCatID( $cat, $loguser );
+function db_getLink($cat, $desc, $user ){
+    $catid = db_getCatID( $cat, $user );
 	$row=db_exec( "SELECT link FROM links WHERE ( cid=? AND text=? );", 
 		array( $catid, $desc ) );
 	if( empty( $row ) ) return "";
@@ -278,8 +272,8 @@ function db_getLink($cat, $desc, $loguser="" ){
 /**
  * delete an entry
  **/
-function db_removeEntry($cat, $link, $desc, $loguser="" ){
-    $catid = db_getCatID( $cat, $loguser );
+function db_removeEntry($cat, $link, $desc, $user ){
+    $catid = db_getCatID( $cat, $user );
 	db_exec( "DELETE FROM links WHERE ( cid=? AND link=? AND text=? );", 
 		array( $catid, $link, $desc ) );
 }
@@ -287,8 +281,8 @@ function db_removeEntry($cat, $link, $desc, $loguser="" ){
 /**
  * change an existing entry into a new one.
  **/
-function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc, $loguser="" ){
-    $catid = db_getCatID( $cat, $loguser );
+function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc, $user ){
+    $catid = db_getCatID( $cat, $user );
 	db_exec( "UPDATE OR IGNORE links SET link=?,text=? WHERE ( cid=? AND link=? AND text=? );", 
 		array( $nlink, $ndesc, $catid, $olink, $odesc ) );
 }
@@ -296,9 +290,9 @@ function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc, $loguser="" ){
 /**
  * Move an entry from one category to another
  **/
-function db_moveEntry($source, $link, $desc, $target, $loguser=""){
-    $scatid = db_getCatID( $source, $loguser );
-    $tcatid = db_getCatID( $target, $loguser );
+function db_moveEntry($source, $link, $desc, $target, $user ){
+    $scatid = db_getCatID( $source, $user );
+    $tcatid = db_getCatID( $target, $user );
     db_exec( "UPDATE OR IGNORE links SET cid=? WHERE ( cid=? AND link=? AND text=? );", 
 		array( $tcatid, $scatid, $link, $desc ) );
 }
@@ -311,36 +305,32 @@ function db_moveEntry($source, $link, $desc, $target, $loguser=""){
  */
 function currentUser( $login )
 {
-    global $forcelogin, $ebm_user;
-    $loguser="";
+    global $forcelogin;
+    $user="PUBLIC";
     $password="";
-
-	// PUBLIC is always valid
-	if( $ebm_user == "PUBLIC" ) return $ebm_user;
 
     if ( isset($_COOKIE["user"]) ) 
 	{
-	    $loguser = $_COOKIE["user"];
+	    $user = $_COOKIE["user"];
 	    $password = $_COOKIE["pass"];
-
-		if( checkpass( $loguser, $password )!=1 ){
-		    $loguser="";
+		if( checkpass( $user, $password )!=1 ){
 		    if($login === true){
-				header("Location: login.php");
-				echo "<a href=\"login.php?user=$ebm_user\">Cookie failure - Please log in again!</a>\n";
+				header("Location: login.php?user=$user");
+				echo "<a href=\"login.php?user=$user\">Cookie failure - Please log in again!</a>\n";
 				exit;
-		    }
+		    } else {
+				$user="PUBLIC";
+			}
 		}
     }else{
-		$loguser = "";
-		if(($forcelogin=="on") && ($login === true)){
+		if( ($forcelogin=="on") || ($login === true) ){
 		    header("Location: login.php");
-		    echo "<a href=\"login.php?user=$ebm_user\">Please log in first!</a>\n";
+		    echo "<a href=\"login.php\">Please log in first!</a>\n";
 		    exit;
 		}
     }
 
-    return $loguser;
+    return $user;
 }
 
 /**
@@ -352,7 +342,7 @@ function currentUser( $login )
  * Not using db_exec as this one recycles the prepared statement
  **/
 function getSetting( $name, $def, $uname ){
-    if ($uname=="") $uname="ebm";
+    if ( $uname=="PUBLIC" ) $uname="ebm";
     $cid = db_openDB();
     $res = $cid->prepare( "SELECT value FROM settings WHERE name=? AND uname=?;" );
 	// db_getSetting is the very first access to the database. If this fails make sure 
@@ -504,9 +494,9 @@ function removeCat( $cat ){
 }
 
 
-function removebyname( $cat, $desc ){
-    $link=db_getLink( $cat, $desc );
-    db_removeEntry( $cat, $link, $desc );
+function removebyname( $cat, $desc, $user ){
+    $link=db_getLink( $cat, $desc, $user );
+    db_removeEntry( $cat, $link, $desc, $user );
 }
 
 function movebyname($source, $desc, $target){
@@ -520,9 +510,9 @@ function move($source, $link, $desc, $target){
 }
 
 // Renaming an entry
-function update($cat, $olink, $odesc, $nlink, $ndesc){
+function update($cat, $olink, $odesc, $nlink, $ndesc, $user){
      $ndesc = makedesc( $ndesc );
-     db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc );
+     db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc, $user );
 }
 
 function nodb(){

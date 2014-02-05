@@ -2,10 +2,7 @@
 require("commands.php");
 
 $loguser=currentUser(true);
-if(($loguser=="") || ($loguser=="ebm")) $ebm_user="PUBLIC";
-else $ebm_user=$loguser;
-
-if(!isset($ebm_public)) $ebm_public="on";
+if( $loguser=="ebm" ) $ebm_user="PUBLIC";
 
 require("setter.php");
 
@@ -15,10 +12,11 @@ $percent=20;
 
 require("header.php");
 
+if( !isset( $ebm_search ) ) $ebm_search="Search";
 $ebm_search=strtolower($ebm_search);
 
 if(isset($ebm_cmd) && $ebm_cmd=="remove"){
-    db_removeEntry($ebm_file, $ebm_link, $ebm_line );
+    db_removeEntry($ebm_file, $ebm_link, $ebm_line, $ebm_user );
 }
 
 echo "<h1>Searchresults for $ebm_search</h1>\n";
@@ -30,15 +28,15 @@ echo "<table class='header' cellpadding='1' border='0' width='98%'>\n";
  * Add the view and the logout switch
  */
 echo "  <tr><td class='header' width='20%'>\n";
-if($ebm_public=="off"){
-    echo "      <a href='index.php?public=on'>Public links</a>\n";
+if($ebm_user=="PUBLIC"){
+    echo "      <a href='index.php?user=PUBLIC'>Public links</a>\n";
 }else{
-    if($loguser==""){
+    if( $loguser == "PUBLIC" ){
         echo "      <a href='login.php'>Login</a>\n";
-    }else if( $loguser=="ebm" ){
+    }else if( $loguser == "ebm" ){
         echo "      <a href='admin.php'>Admin</a>\n";
     }else{
-        echo "      <a href='index.php?public=off'>$loguser's links</a>\n";
+        echo "      <a href='index.php?name=$loguser'>$loguser's links</a>\n";
     }
 }
 echo "  </td>\n";
@@ -50,7 +48,7 @@ if($quicksearch=="on"){
      echo "  <td class='header' style='white-space:nowrap;'>\n";
      echo "    <form action='search.php' method='post'>\n";
      echo "      <input name='search' type='text'>\n";
-     echo "      <input type='hidden' name='public' value='$ebm_public'>\n";
+     echo "      <input type='hidden' name='user' value='$ebm_user'>\n";
      echo "      <input type='submit' value='search'>\n";
      echo "    </form>\n";
      echo "  </td>\n";
@@ -63,14 +61,10 @@ echo "</tr></table>\n";
 
 echo "\n<p style='margin:20px;'></p>\n";
 
-// get all categories
-$categories=getCategories();
-sort($categories);
-
 printSearch( $ebm_search, "PUBLIC" );
 if($ebm_user != "PUBLIC"){
     echo "\n<p style='margin:20px;'></p>\n";
-	printSearch($ebm_search, $loguser);
+	printSearch($ebm_search, $ebm_user);
 }
 
 echo "\n<p style='margin:20px;'></p>\n";
@@ -78,7 +72,7 @@ echo "\n<p style='margin:20px;'></p>\n";
 echo "<table class='newlink' cellpadding='1' border='0'>\n";
 echo "<tr>\n";
 echo "  <form action='search.php' method='post'\n";
-echo "    <input type='hidden' name='public' value='$ebm_public'>\n";
+echo "    <input type='hidden' name='user' value='$ebm_user'>\n";
 echo "    <td>\n";
 echo "      New Search:\n";
 echo "    </td><td>\n";
@@ -99,7 +93,7 @@ echo "\n<p style='margin:20px;'></p>\n";
 require("footer.php");
 
 function printSearch( $keyword, $username ) {
-global $newwin, $killbutton,$ebm_public;
+global $newwin, $killbutton;
 	$lastcat="";
 	$flag = true;
 
@@ -155,18 +149,17 @@ global $newwin, $killbutton,$ebm_public;
 		}
 
 		if( $lastcat != $entry['cat'] ) {
+			if( $lastcat != "" ) { 
+				fillTable( $left, $lrows, $lpercent, $factor );
+			}
 			$lastcat = $entry['cat'];
-			fillTable( $left, $lrows, $lpercent, $factor );
 			echo "  <tr>\n";
 			echo "    <td class='catlist' width='95%' colspan='$colspan'>\n";
-			echo "      <a href='index.php?category=$lastcat&public=";
-			if( $username=="PUBLIC" ) echo "on";
-			else echo "off";
-			echo "'>$lastcat</a>\n";
+			echo "      <a href='index.php?category=$lastcat&user=$username'>$lastcat</a>\n";
 			echo "    </td>\n";
 			echo "  </tr>\n";
 
-			$left=0;
+			$left=1;
 		}
 
 		echo "    <td class='$rowcol' width='$lpercent%'>";
@@ -176,7 +169,7 @@ global $newwin, $killbutton,$ebm_public;
 		if($killbutton=="on"){
 			echo "    <td class='$rowcol' width='20'>\n";
 		    echo "      <form action='search.php' method='post'>\n";
-		    echo "        <input type='hidden' name='public' value='$ebm_public'>\n";
+		    echo "        <input type='hidden' name='user' value='$username'>\n";
 		    echo "        <input type='hidden' name='cmd' value='remove'>\n";
 		    echo "        <input type='hidden' name='file' value='$lastcat'>\n";
 		    echo "        <input type='hidden' name='link' value='$link'>\n";

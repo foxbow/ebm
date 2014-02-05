@@ -36,15 +36,6 @@ xmlhttp.send();
 }
 </script>\n";
 
-if(empty($ebm_public)){
-    $ebm_public="on";
-}
-if($ebm_public=="off"){
-    $ebm_user = $loguser;
-}else{
-    $ebm_user = "PUBLIC";
-}
-
 echo "<h1>Check $ebm_category</h1>\n";
 echo "<hr>\n";
 
@@ -57,7 +48,7 @@ if($ebm_cmd=="delete"){
     }else{
 		echo "Deleting:<ul>\n";
 		foreach( $ebm_name as $name ){
-		    removeByName( $ebm_category, $name );
+		    removeByName( $ebm_category, $name, $ebm_user );
 		    echo "<li>$name</li>\n";
 		}
 		echo "</ul>\n";
@@ -65,21 +56,21 @@ if($ebm_cmd=="delete"){
 }
 
 $encat=urlencode($ebm_category);
-echo "<a href=\"index.php?category=$encat&amp;public=$ebm_public\"><b>Back to $ebm_category</b></a>\n";
+echo "<a href=\"index.php?category=$encat&amp;user=$ebm_user\"><b>Back to $ebm_category</b></a>\n";
 echo "<hr>\n";
 
 /*****************************************************************************/
 // Open the master Table
 
 $actual=chop($ebm_category);
-$entries = getEntries($actual);
+$entries = getEntries($actual, $ebm_user);
 
 echo "<center>\n";
 
 echo "<form action=\"$myname\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"cmd\" value=\"delete\">\n";
 echo "<input type=\"hidden\" name=\"category\" value=\"$ebm_category\">\n";
-echo "<input type=\"hidden\" name=\"public\" value=\"$ebm_public\">\n";
+echo "<input type=\"hidden\" name=\"user\" value=\"$ebm_user\">\n";
 
 echo "<table class=\"links\" cellpadding=\"1\" border=\"0\">\n";
 echo "  <tr>\n";
@@ -101,13 +92,7 @@ foreach($entries as $entry){
     echo "<a href=\"$ebm_link\"";
     if( $newwin == "on" ) echo " target='_blank'";
     echo ">$name</a></td>\n";
-/*
-    $result = validate( $ebm_link );
-    echo "    <td class='$rowcol' align='left'>";
-    echo "$result</td>\n";
-*/
     echo "    <td class='$rowcol' align='left' id=\"field$fid\">.. checking ..</td>\n";
-//<div id="myDiv"><h2>Let AJAX change this text</h2></div>
 
 // Killbutton
     echo "    <td><input type='checkbox' name='name[]' value=\"$name\"></td>\n";
@@ -131,7 +116,7 @@ echo "</center>\n";
 /*****************************************************************************/
 
 echo "<hr>\n";
-echo "<a href=\"index.php?category=$encat&public=$ebm_public\"><b>Back to $ebm_category</b></a>\n";
+echo "<a href=\"index.php?category=$encat&user=$ebm_user\"><b>Back to $ebm_category</b></a>\n";
 
 require("footer.php");
 ?>

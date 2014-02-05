@@ -2,10 +2,6 @@
 require("commands.php");
 $loguser=currentUser(true);
 require("setter.php");
-$ebm_user=$loguser;
-if(!isset($ebm_public)) $ebm_public="on";
-
-if( ($ebm_public=="off") && ($ebm_user=="") ) $ebm_public="on";
 
 require("header.php");
 
@@ -19,13 +15,9 @@ if (!isset($ebm_gotline)) $ebm_gotline="";
 $rows=5;
 $percent=100/$rows;
 
-if(empty($ebm_public)) $ebm_public="on";
-
-if($ebm_public=="on"){
-    $ebm_user = "PUBLIC";
+if($ebm_user == "PUBLIC" ){
     echo "<h1>Add link to $title</h1>\n";
 }else{
-    // $ebm_user = $HTTP_SERVER_VARS["PHP_AUTH_USER"];
     echo "<h1>Add Link to $title for $ebm_user</h1>\n";
 }
 
@@ -49,10 +41,10 @@ echo "<table class='header' cellpadding='1' border='0' width='98%'>\n";
  * Add the view and the logout switch
  */
 echo "  <tr><td class='header' width='20%'>\n";
-if($ebm_public=="off"){
-	 echo "      <a href='add.php?public=on&gotlink=$ebm_gotlink&gotline=$ebm_gotline'>Public links</a>\n";
+if($ebm_user != "PUBLIC" ){
+	 echo "      <a href='add.php?user=PUBLIC&gotlink=$ebm_gotlink&gotline=$ebm_gotline'>Public links</a>\n";
 }else{
-	 if($loguser==""){
+	 if( $loguser == "PUBLIC" ){
 		  if($ebm_category==""){
 				echo "      <a href='login.php'>Login</a>\n";
 		  }else{
@@ -61,7 +53,7 @@ if($ebm_public=="off"){
 	 }else if( $loguser=="ebm" ){
 		  echo "      <a href='admin.php'>Admin</a>\n";
 	 }else{
-		  echo "      <a href='add.php?public=off&gotlink=$ebm_gotlink&gotline=$ebm_gotline'>$loguser's links</a>\n";
+		  echo "      <a href='add.php?user=$loguser&gotlink=$ebm_gotlink&gotline=$ebm_gotline'>$loguser's links</a>\n";
 	 }
 }
 echo "  </td>\n";
@@ -74,7 +66,6 @@ if($quicksearch=="on"){
      echo "  <td class='header' style='white-space:nowrap;'>\n";
      echo "    <form action='search.php' method='post'\n";
      echo "      <input name='search' type='text'>\n";
-     echo "      <input type='hidden' name='public' value='$ebm_public'>\n";
      echo "      <input type='submit' value='search'>\n";
      echo "    </form>\n";
      echo "  </td>\n";
@@ -86,16 +77,16 @@ echo "</tr></table>\n";
 
 echo "\n<p style='margin:20px;'></p>\n";
 
-$categories=getCategories();
+$categories=getCategories( $ebm_user );
 sort($categories);
 
-if( ($publicadd=="on") || ($loguser!="") ){
+if( ($publicadd=="on") || ($loguser!="PUBLIC") ){
      // New entry
      if(count($categories > 0)){
           echo "<table class='newlink' cellpadding='1' border='0'>\n";
           echo "<tr>\n";
           echo "<form action='index.php' method='post'>\n";
-          echo "  <input type='hidden' name='public' value='$ebm_public'>\n";
+          echo "  <input type='hidden' name='user' value='$ebm_user'>\n";
           echo "  <input type='hidden' name='cmd' value='append'>\n";
           echo "    <td>New Link</td><td><input type='text' name='link' value='$ebm_gotlink'></td>\n";
           echo "    <td>description:</td><td><input type='text' name='line' value='$ebm_gotline'></td>\n";

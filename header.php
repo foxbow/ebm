@@ -10,12 +10,8 @@
   echo "  <link rel=\"stylesheet\" type=\"text/css\" href=\"css/$cssfile\">\n";
   if(isset($ebm_category)) $cat=$ebm_category;
   else $cat=$defcat;
-  if(isset($ebm_user)){
-    echo "  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"$cat\" href=\"$uripath/ebm2rss.php?user=$ebm_user&category=$cat\">\n";
-  }else{
-    echo "  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"$cat\" href=\"$uripath/ebm2rss.php?category=$cat\">\n";
-  }
-  if((!isset($ebm_public)) || ($ebm_public=="on"))
+  echo "  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"$cat\" href=\"$uripath/ebm2rss.php?user=$ebm_user&category=$cat\">\n";
+  if( $ebm_user == "PUBLIC" )
     echo "  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Overview\" href=\"$uripath/ebmcatrss.php\">\n";
   else
     echo "  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Overview\" href=\"$uripath/ebmcatrss.php?user=$ebm_user\">\n";

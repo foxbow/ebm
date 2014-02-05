@@ -4,14 +4,7 @@ require("commands.php");
 $loguser=currentUser(false);
 require("setter.php");
 
-if((!isset($ebm_user)) || ($ebm_user=="PUBLIC")){
-    $ebm_user="PUBLIC";
-    $ebm_public="on";
-}else{
-    $ebm_public="off";
-}
 if(!isset($ebm_title)) $ebm_title="EasyBookMarks";
-if(!isset($ebm_public)) $ebm_public="on";
 
 header("Content-type: text/xml");
 echo "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
@@ -32,8 +25,7 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   sort($entries);
   foreach($entries as $entry){
     $entry=chop($entry);
-    $link="index.php?category=".$entry."&public=".$ebm_public;
-    if($ebm_public=="off") $link=$link."&user=".$ebm_user;
+    $link="index.php?category=".$entry."&user=".$ebm_user;
     echo "    <item>\n";
     echo "      <title>".str_replace("&", "&#38;", $entry)."</title>\n";
     echo "      <link>".str_replace("&", "&#38;", $link)."</link>\n";

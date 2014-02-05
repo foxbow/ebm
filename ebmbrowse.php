@@ -4,10 +4,8 @@ require("commands.php");
 $loguser=currentUser(true);
 require("setter.php");
 
-if(!isset($ebm_user)) $ebm_user="PUBLIC";
 if(!isset($ebm_category)) $ebm_category=$defcat;
 if(!isset($ebm_title)) $ebm_title="EasyBookMarks";
-if(!isset($ebm_public)) $ebm_public="on";
 
 $category=chop($ebm_category);
 if(!isset($ebm_current)) $ebm_current="";
@@ -26,7 +24,7 @@ if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
 }
 
 $table=array();
-$entries=getEntries($category);
+$entries=getEntries($category, $ebm_user );
 sort($entries);
 foreach($entries as $entry){
   $table[$entry['desc']]=$entry['link'];
