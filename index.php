@@ -34,13 +34,14 @@ if(empty($ebm_cmd)){
 }
 // check for commands
 if($ebm_cmd=="append"){
-    append($ebm_category, $ebm_link, $ebm_line );
+    append( $ebm_category, $ebm_link, $ebm_line, $ebm_user );
 }
+
 if($ebm_cmd=="newcat"){
     newcat($ebm_category);
 }
 if($ebm_cmd=="remove"){
-    db_removeEntry($ebm_file, $ebm_link, $ebm_line );
+    db_removeEntry($ebm_file, $ebm_link, $ebm_line, $ebm_user );
 }
 if($ebm_cmd=="delete"){
     removeCat($ebm_line);

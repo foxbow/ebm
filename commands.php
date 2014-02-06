@@ -383,27 +383,9 @@ function setSetting( $name, $value, $uname ){
  **/
 function getTitle( $link ){
 	$fp = fopen( $link, 'r');
+
 	$line = "";
-
-	$title = $link;	
-
-	// Get rid of the protocol (if any)
-	$pre = strpos( $link, "://" );
-	if( $pre !== false ) {
-		$title = substr( $title, $pre+3 );
-	}
-
-	// get rid of www. (if any)
-	$pre = strpos( $link, "www." );
-	if( $pre !== false ) {
-		$title = substr( $link, $pre+4 );
-	}
-
-	// No trailing slashes either
-	if( $title[ strlen( $title )-1 ] == "/" ) {
-		$title = substr( $title, 0, strlen( $title)-1 );
-
-	} 
+	$title = "";	
 
 	// Is title set explicitly?
 	if( $fp ){
@@ -419,10 +401,27 @@ function getTitle( $link ){
 			}
 		}
 		fclose( $fp );
-	}else{
-		$title = "! $title unreachable !";
 	}
 
+	if( $title == "" ) {
+		// Get rid of the protocol (if any)
+		$pre = strpos( $link, "://" );
+		if( $pre !== false ) {
+			$title = substr( $title, $pre+3 );
+		}
+
+		// get rid of www. (if any)
+		$pre = strpos( $link, "www." );
+		if( $pre !== false ) {
+			$title = substr( $link, $pre+4 );
+		}
+
+		// No trailing slashes either
+		if( $title[ strlen( $title )-1 ] == "/" ) {
+			$title = substr( $title, 0, strlen( $title)-1 );
+
+		}
+	}
 	return $title;
 }
 
@@ -448,8 +447,9 @@ function checkpass($user, $pass){
  * $file - target category
  * $line - description
  * $link - URL
+ * $user - the owner of the category, PUBLIC for public entries
  */
-function append($cat, $link, $desc){
+function append($cat, $link, $desc, $user ){
      if($link != ""){
           // Make sure that we have a protocol
           if( substr_count($link, "://") == 0){
@@ -462,10 +462,8 @@ function append($cat, $link, $desc){
           }else{
                 $desc=makedesc(getTitle( $link ));
           }
-
-          // newCat( $cat );
           // Save the new entry
-          db_appendEntry($cat, $link, $desc);
+          db_appendEntry($cat, $link, $desc, $user);
      }
 
      return "$desc";
