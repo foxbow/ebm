@@ -38,13 +38,13 @@ if($ebm_cmd=="append"){
 }
 
 if($ebm_cmd=="newcat"){
-    newcat($ebm_category);
+    newcat($ebm_category, $ebm_user);
 }
 if($ebm_cmd=="remove"){
     db_removeEntry($ebm_file, $ebm_link, $ebm_line, $ebm_user );
 }
 if($ebm_cmd=="delete"){
-    removeCat($ebm_line);
+    removeCat($ebm_line, $ebm_user);
 }
 
 if(($ebm_category=="categories") || ($ebm_category=="")){
@@ -282,12 +282,12 @@ if( ($publicadd=="on") || ($loguser!="PUBLIC") ){
           echo "<form action='$myname' method='post'>\n";
           echo "  <input type='hidden' name='user' value='$ebm_user'>\n";
           echo "  <input type='hidden' name='cmd' value='append'>\n";
-	  echo "    <td><a href='javascript:link=document.URL;line=document.title;if(window.confirm('Add '+link+' as '+line+' to $ebm_category?')){window.location='$ebmurl/add.php?user=$ebm_user&category=$ebm_category&gotlink='+escape(document.URL)+'&gotline='+escape(document.title);}else{window.stop();}'";
+	  echo "    <td><a href=\"javascript:link=document.URL;line=document.title;if(window.confirm('Add '+link+' as '+line+' to $ebm_category?')){window.location='$ebmurl/add.php?user=$ebm_user&category=$ebm_category&gotlink='+escape(document.URL)+'&gotline='+escape(document.title);}else{window.stop();}\"";
 	  echo "title='Pull this Bookmarklet to your toolbar for autoadding pages to $ebm_category'>";
           echo "Add URL</a></td><td><input type='text' name='link'></td>\n";
           echo "    <td>description:</td><td><input type='text' name='line'></td>\n";
 //          echo "    <td>in</td>";
-	  echo "    <td><a href='javascript:link=document.URL;line=document.title;window.location='$ebmurl/index.php?user=$ebm_user&category=$ebm_category&link='+escape(document.URL)+'&line='+escape(document.title)+'&cmd=append';'";
+ 	  echo "    <td><a href=\"javascript:link=document.URL;line=document.title;window.location='$ebmurl/index.php?user=$ebm_user&category=$ebm_category&link='+escape(document.URL)+'&line='+escape(document.title)+'&cmd=append';\"";
 	  echo "title='Pull this Bookmarklet to your toolbar for quick autoadding pages to $ebm_category'>";
 	  echo "in</a></td>\n";
 	  echo "    <td><select name='category'>\n";

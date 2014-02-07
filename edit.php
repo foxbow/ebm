@@ -42,7 +42,7 @@ echo "<a href=\"index.php?category=$encat&amp;name=$ebm_user\"><b>Back to $ebm_c
 echo "<hr>\n";
 
 // get all categories
-$categories=getCategories();
+$categories=getCategories( $ebm_user );
 // sort the categories
 sort($categories);
 

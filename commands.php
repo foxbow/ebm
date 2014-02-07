@@ -290,7 +290,7 @@ function db_updateEntry($cat, $olink, $odesc, $nlink, $ndesc, $user ){
 /**
  * Move an entry from one category to another
  **/
-function db_moveEntry($source, $link, $desc, $target, $user ){
+function move($source, $link, $desc, $target, $user ){
     $scatid = db_getCatID( $source, $user );
     $tcatid = db_getCatID( $target, $user );
     db_exec( "UPDATE OR IGNORE links SET cid=? WHERE ( cid=? AND link=? AND text=? );", 
@@ -450,44 +450,47 @@ function checkpass($user, $pass){
  * $user - the owner of the category, PUBLIC for public entries
  */
 function append($cat, $link, $desc, $user ){
-     if($link != ""){
-          // Make sure that we have a protocol
-          if( substr_count($link, "://") == 0){
-                $link="http://$link";
-          }
+	if($link != ""){
+		// Make sure that we have a protocol
+		if( substr_count($link, "://") == 0){
+			$link="http://$link";
+		}
 
-          // Set the right Title or scan it from the site
-          if("$desc" != ""){
-                $desc=makedesc("$desc");
-          }else{
-                $desc=makedesc(getTitle( $link ));
-          }
-          // Save the new entry
-          db_appendEntry($cat, $link, $desc, $user);
-     }
+		// Looks like '+'s get lost in Chrome which is bad for Google+ links
+		$link = str_replace(" ", "+", $link);
 
-     return "$desc";
+		// Set the right Title or scan it from the site
+		if("$desc" != ""){
+			$desc=makedesc("$desc");
+		}else{
+			$desc=makedesc(getTitle( $link ));
+		}
+		// Save the new entry
+		db_appendEntry($cat, $link, $desc, $user);
+	}
+
+	return "$desc";
 }
 
-function renCat( $ocat, $ncat ){
+function renCat( $ocat, $ncat, $user ){
     if(($ocat != "") && ($ncat != "")){
         $ncat=ucfirst("$ncat");
-        db_renCat( $ocat, $ncat );
+        db_renCat( $ocat, $ncat, $user );
         return $ncat;
     }
 }
 
-function newCat( $cat ){
+function newCat( $cat, $user ){
      if($cat != ""){
           $cat=ucfirst("$cat");
-          db_newCat( $cat );
+          db_newCat( $cat, $user );
      }
 }
 
-function removeCat( $cat ){
+function removeCat( $cat, $user ){
      if( "$cat" != "" ){
           $cat = ucfirst("$cat");
-          db_removeCat( $cat );
+          db_removeCat( $cat, $user );
      }
 }
 
@@ -497,14 +500,9 @@ function removebyname( $cat, $desc, $user ){
     db_removeEntry( $cat, $link, $desc, $user );
 }
 
-function movebyname($source, $desc, $target){
-    $link=db_getLink($source, $desc);
-    if($link!="") db_moveEntry($source, $link, $desc, $target);
-}
-
-// Moving of entries
-function move($source, $link, $desc, $target){
-     db_moveEntry($source, $link, $desc, $target);
+function movebyname($source, $desc, $target, $user){
+    $link=db_getLink($source, $desc, $user);
+    if($link!="") move($source, $link, $desc, $target, $user);
 }
 
 // Renaming an entry
@@ -528,18 +526,20 @@ function nodb(){
 // especially we want to get rid of &...; constructs as
 // they will fsck up the database
 function makedesc( $desc ){
-     // A space is a space is a space...
-     $desc = str_replace("&nbsp;", " ", $desc);
-     // Only single quotes desired
-     $desc = str_replace("\"", "'", $desc);
-     // Get the translation
-     $trans = get_html_translation_table(HTML_ENTITIES);
-     $trans = array_flip($trans);
-     // And translate
-     $desc = strtr($desc, $trans);
-     // Always start with a capital letter
-     $desc = ucfirst( "$desc" );
-     return $desc;
+	// A space is a space is a space...
+	$desc = str_replace("&nbsp;", " ", $desc);
+	// No blanks on the ends please
+	$desc=trim($desc);
+	// Only single quotes desired
+	$desc = str_replace("\"", "'", $desc);
+	// Get the translation
+	$trans = get_html_translation_table(HTML_ENTITIES);
+	$trans = array_flip($trans);
+	// And translate
+	$desc = strtr($desc, $trans);
+	// Always start with a capital letter
+	$desc = ucfirst( "$desc" );
+	return $desc;
 }
 /*
  * Returns an array with all found *.css files
