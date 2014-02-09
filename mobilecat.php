@@ -21,7 +21,7 @@ echo "</head><body>\n";
 if(($ebm_user!="PUBLIC") && ($ebm_user!=$loguser)){
   echo "<a href='login.php?user=$ebm_user'&return='mobilecat.php'>Log in as $ebm_user first!</a>\n";
 }else{
-  $entries=getCategories();
+  $entries=getCategories($ebm_user);
   sort($entries);
   foreach($entries as $entry){
     echo "  <a class='mobile' href='mobile.php?category=$entry'>".$entry."</a>\n";
