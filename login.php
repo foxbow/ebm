@@ -27,6 +27,8 @@ if( isset($ebm_pass) ){
 require("setter.php");
 require("header.php");
 
+if( $ebm_user=="PUBLIC" ) $ebm_user="";
+
 echo "<h1>Log into Easybookmarks</h1>\n";
 echo "<form action=\"login.php\" method=\"post\">\n";
 echo "  <table border=0>\n";

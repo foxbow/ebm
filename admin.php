@@ -23,6 +23,9 @@ if( $ebm_cmd == "set" ){
 	  $motd = setSetting( "motd", $ebm_motd, $loguser );
 	if( $contact != $ebm_contact )
 	  $contact = setSetting( "contact", $ebm_contact, $loguser );
+	if( !isset( $ebm_https ) ) $ebm_https="off";
+	if( $https != $ebm_https )
+	  $https = setSetting( "https", $ebm_https, $loguser );
 	if( !isset( $ebm_forcelogin ) ) $ebm_forcelogin="off";
 	if( $forcelogin != $ebm_forcelogin )
 	  $forcelogin = setSetting( "forcelogin", $ebm_forcelogin, $loguser );
@@ -136,6 +139,7 @@ if($loguser=="ebm"){
     lazyText ("Contact address", "contact", $contact);
     lazyCheck("Force login", "forcelogin", $forcelogin);
     lazyText("Days for cookie to be valid", "days", $days );
+	lazyCheck("Use HTTPS", "https", $https);
 }
 lazyCheck("Show search field", "quicksearch", $quicksearch);
 lazyCheck("Jump to edit page in livebookmarks", "toedit", $toedit);
@@ -243,9 +247,6 @@ echo "        </td>\n";
 echo "    </tr>\n";
 echo "  </table>\n";
 echo "</form>\n";
-
-if($loguser=="ebm")
-echo "<h3><a href=\"pt2db.php\">Import from plaintext</a></h3>\n";
 
 echo "<a href=\"index.php\">Back</a>\n";
 

@@ -1,6 +1,7 @@
 <?PHP
 /** history **/
 // $current$
+// See https://github.com/foxbow/ebm/commits/master for the current changelog
 // Removed Google and Leo searches
 // Fix bug in searchpage header
 // 3.0beta4

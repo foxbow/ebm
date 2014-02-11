@@ -39,16 +39,16 @@ if(($ebm_user!="") && ($ebm_user!="ebm")){
   echo "    <HR>\n";
   echo "    <DT><H3>$ebm_user's Bookmarks</H3>\n";
   echo "    <DL><p>\n";
-  $categories=getCategories();
+  $categories=getCategories($ebm_user);
   sort($categories);
   foreach($categories as $actual){
     $actual=chop($actual);
     echo "        <DT><H3>$actual</H3>\n";
     echo "        <DL><p>\n";
-    $entries=getEntries($actual);
+    $entries=getEntries($actual, $ebm_user);
     sort($entries);
     foreach($entries as $entry){
-      echo "            <DT><A HREF=\"".$entry['link']."\">."$entry['desc']."</A>\n";
+      echo "            <DT><A HREF=\"".$entry['link']."\">".$entry['desc']."</A>\n";
     }
     echo "        </DL><p>\n";
   }

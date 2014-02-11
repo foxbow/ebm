@@ -23,19 +23,22 @@ if (!isset( $settings_loaded ) || ( $settings_loaded == "off" ) ) {
     $publicadd     = getSetting("publicadd", "off", "ebm" );
     $contact       = getSetting("contact", "", "ebm" );
     $motd          = getSetting("motd", "", "ebm" );
+	$https		   = getSetting("https", "off", "ebm");
 }
 
 // extract($_REQUEST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
 extract($_GET, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
 extract($_POST, EXTR_PREFIX_ALL|EXTR_REFS, 'ebm');
+if( !isset( $ebm_user ) ) $ebm_user="PUBLIC";
 
 // Find out where we are located
 $uripath=$_SERVER['PHP_SELF'];
+
 $uripath=substr($uripath, 0, strrpos($uripath, '/'));
-if( isset ( $_SERVER['HTTPS'] ) && ( $_SERVER['HTTPS'] != "" ) ) {
-	$ebmurl="https://".$_SERVER['SERVER_NAME'].$uripath;
-} else {
+if( $https == "off" ) {
 	$ebmurl="http://".$_SERVER['SERVER_NAME'].$uripath;
+} else {
+	$ebmurl="https://".$_SERVER['SERVER_NAME'].$uripath;
 }
 
 /**
@@ -47,7 +50,7 @@ function db_exec( $SQL, $param=array() ){
 	$cid->beginTransaction();
     $res = $cid->prepare( $SQL );
 	if( (false === $res ) || ( false === $res->execute( $param ) ) ) {
-    	echo( $SQL."<br>\n");
+    	echo( "'$SQL' failed!<br>\n");
       	print_r( $cid->errorInfo() );
 		$cid->rollback();
 	 } else {
@@ -91,7 +94,12 @@ function db_openDB(){
  * does this really work on any DB?
  **/
 function dbcleanup(){
-    db_exec( "VACUUM;" );
+	$cid=db_openDB();
+    $res = $cid->prepare( "VACUUM;" );
+	if( (false === $res ) || ( false === $res->execute() ) ) {
+    	echo( "'VACUUM;' failed!<br>\n");
+      	print_r( $cid->errorInfo() );
+	 }
 }
 
 
@@ -305,11 +313,11 @@ function move($source, $link, $desc, $target, $user ){
  */
 function currentUser( $login )
 {
-    global $forcelogin;
+    global $forcelogin, $ebm_user;
     $user="PUBLIC";
     $password="";
 
-    if ( isset($_COOKIE["user"]) ) 
+    if( isset($_COOKIE["user"]) ) 
 	{
 	    $user = $_COOKIE["user"];
 	    $password = $_COOKIE["pass"];
@@ -323,9 +331,16 @@ function currentUser( $login )
 			}
 		}
     }else{
-		if( ($forcelogin=="on") || ($login === true) ){
+/*
+		if( ( $ebm_user != "PUBLIC" ) && ( ($forcelogin=="on") || ($login === true) ) ){
 		    header("Location: login.php");
 		    echo "<a href=\"login.php\">Please log in first!</a>\n";
+		    exit;
+		}
+*/
+		if( $ebm_user != "PUBLIC" ) {
+		    header("Location: login.php?user=$ebm_user");
+		    echo "<a href=\"login.php?user=$ebm_user\">Please log in as $ebm_user first!</a>\n";
 		    exit;
 		}
     }

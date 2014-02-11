@@ -1,6 +1,5 @@
 <?php
 require("commands.php");
-// echo "user = $ebm_user<br>\n";
 
 $loguser=currentUser(true);
 
