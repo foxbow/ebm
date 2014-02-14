@@ -209,7 +209,8 @@ function db_renCat( $cat, $ncat, $user ){
  */
 function db_getCatID( $cat, $user ){
 	$catid=db_exec( "SELECT cid FROM cats WHERE ( name=? AND cat=? );", array( $user, $cat ) );
-    return $catid[0]['cid'];
+	if( !isset( $catid[0]['cid'] ) ) return -1;
+    else return $catid[0]['cid'];
 }
 
 /**
