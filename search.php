@@ -62,9 +62,9 @@ echo "</tr></table>\n";
 echo "\n<p style='margin:20px;'></p>\n";
 
 printSearch( $ebm_search, "PUBLIC" );
-if($ebm_user != "PUBLIC"){
+if($loguser != "PUBLIC"){
     echo "\n<p style='margin:20px;'></p>\n";
-	printSearch($ebm_search, $ebm_user);
+	printSearch($ebm_search, $loguser);
 }
 
 echo "\n<p style='margin:20px;'></p>\n";

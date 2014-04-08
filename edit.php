@@ -38,7 +38,7 @@ if($ebm_cmd=="move"){
 }
 
 $encat=urlencode($ebm_category);
-echo "<a href=\"index.php?category=$encat&amp;name=$ebm_user\"><b>Back to $ebm_category</b></a>\n";
+echo "<a href=\"index.php?category=$encat&amp;user=$ebm_user\"><b>Back to $ebm_category</b></a>\n";
 echo "<hr>\n";
 
 // get all categories

@@ -175,12 +175,9 @@ function getCategories( $user ){
  * Creates a new category and sets a new catid
  **/
 function db_newCat( $cat, $user ){
-    $cid = db_openDB();
-	$res = $cid->query( "SELECT MAX(cid) FROM cats;" );
 	$val = 0;
-	while ($row = $res->fetch(PDO::FETCH_NUM)) {
-		$val = $row[0];
-	}
+	$res = db_exec( "SELECT MAX(cid) FROM cats;" );
+	if( !empty( $res ) ) $val=$res[0][0];
 	$val=$val+1;
 	db_exec( "INSERT OR IGNORE INTO cats ( name, cat, cid ) VALUES ( ?, ?, ? );",
 		array( $user, $cat, $val ) );
@@ -209,7 +206,7 @@ function db_renCat( $cat, $ncat, $user ){
  */
 function db_getCatID( $cat, $user ){
 	$catid=db_exec( "SELECT cid FROM cats WHERE ( name=? AND cat=? );", array( $user, $cat ) );
-	if( !isset( $catid[0]['cid'] ) ) return -1;
+	if( empty( $catid ) ) return -1;
     else return $catid[0]['cid'];
 }
 
@@ -219,7 +216,8 @@ function db_getCatID( $cat, $user ){
  */
 function db_getCatName( $cat ){
 	$res = db_exec( "SELECT cat FROM cats WHERE ( cid=? );", array( $cat ) );
-    return $res[0]['cat'];
+    if( empty( $res) ) return "UNKNOWN";
+	else return $res[0]['cat'];
 }
 
 /**
