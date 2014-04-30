@@ -92,7 +92,7 @@ foreach($entries as $entry){
     echo "<a href=\"$ebm_link\"";
     if( $newwin == "on" ) echo " target='_blank'";
     echo ">$name</a></td>\n";
-    echo "    <td class='$rowcol' align='left' id=\"field$fid\">.. checking ..</td>\n";
+    echo "    <td class='$rowcol' align='left' id=\"field$fid\"><img src='waiting.gif' alt='...'></td>\n";
 
 // Killbutton
     echo "    <td><input type='checkbox' name='name[]' value=\"$name\"></td>\n";
