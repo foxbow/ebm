@@ -3,7 +3,7 @@ require("header.php");
 ?>
 <h1>EBM Quickhelp</h1>
 <table cellpadding=5>
-<tr><th><i>Login</i></b></th><td>Gives the chance to log in and get access to the personal links.</td></tr>
+<tr><th><i>Login</i></th><td>Gives the chance to log in and get access to the personal links.</td></tr>
 <tr><th><i>Logout</i></th><td>Logs you out of the curent session.</td></tr>
 <tr><th>[*]</th><td>Creates a new category.</td></tr>
 <tr><th>?</th><td>D'Oh!</td></tr>
