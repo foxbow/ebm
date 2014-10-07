@@ -337,7 +337,7 @@ function currentUser( $login )
 		    exit;
 		}
 */
-		if( $ebm_user != "PUBLIC" ) {
+		if( ( $ebm_user != "PUBLIC" ) && ( $login === true ) ) {
 		    header("Location: login.php?user=$ebm_user");
 		    echo "<a href=\"login.php?user=$ebm_user\">Please log in as $ebm_user first!</a>\n";
 		    exit;

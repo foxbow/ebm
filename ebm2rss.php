@@ -2,7 +2,7 @@
 require("commands.php");
 require("setter.php");
 
-$loguser=currentUser( true );
+$loguser=currentUser( false );
 
 if(!isset($ebm_category)) $ebm_category=$defcat;
 if(!isset($ebm_title)) $ebm_title="EasyBookMarks";
