@@ -33,6 +33,10 @@ if(empty($ebm_cmd)){
 }
 // check for commands
 if($ebm_cmd=="append"){
+    $encoding = mb_detect_encoding($ebm_line, "UTF-8,ISO-8859-1,WINDOWS-1252");
+    if ($encoding != 'UTF-8') {
+        $ebm_line=iconv($encoding, 'UTF-8//TRANSLIT', $ebm_line);
+    }
     append( $ebm_category, $ebm_link, $ebm_line, $ebm_user );
 }
 

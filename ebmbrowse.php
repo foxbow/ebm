@@ -62,7 +62,7 @@ $next=urlencode($next);
 $ebm_category=urlencode($ebm_category);
 
 echo "<frameset rows=\"30px,*\">\n";
-echo "  <frame src=\"ebmbrowsehead.php?next=$next&user=$ebm_user&category=$ebm_category\">\n";
+echo "  <frame src=\"ebmbrowsehead.php?next=$next&user=$ebm_user&category=$ebm_category&curlink=$curlink\">\n";
 echo "  <frame src=\"$curlink\">\n";
 echo "  <noframes>\n";
 echo "    <body><h1>Sorry, I need frames for this feature</h1></body>\n";

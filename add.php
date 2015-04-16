@@ -11,6 +11,11 @@ else $referer="No referer set!";
 if (!isset($ebm_gotlink)) $ebm_gotlink=$referer;
 if (!isset($ebm_gotline)) $ebm_gotline="";
 
+$encoding = mb_detect_encoding($ebm_gotline, "UTF-8,ISO-8859-1,WINDOWS-1252");
+if ($encoding != 'UTF-8') {
+    $ebm_gotline=iconv($encoding, 'UTF-8//TRANSLIT', $ebm_gotline);
+}
+
 // Headers
 $rows=5;
 $percent=100/$rows;
