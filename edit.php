@@ -33,8 +33,11 @@ if($ebm_cmd=="rencat"){
     $ebm_category=renCat($ebm_category, $ebm_newcat, $ebm_user);
 }
 
+// remember last target category after move
+$catmem="";
 if($ebm_cmd=="move"){
     movebyname($ebm_category, $ebm_line, $ebm_file, $ebm_user);
+    $catmem=$ebm_file;
 }
 
 $encat=urlencode($ebm_category);
@@ -98,8 +101,13 @@ echo "        to\n";
 echo "        <input type=\"hidden\" name=\"cmd\" value=\"move\">\n";
 echo "        <select name=\"file\">\n";
 foreach($categories as $target){
-    if(chop($target) != chop($actual))
-        echo "          <option>$target</option>\n";
+    if(chop($target) != chop($actual)) {
+    	if( chop($target) != $catmem ) {
+	        echo "          <option>$target</option>\n";
+	    } else {
+	        echo "          <option selected>$target</option>\n";
+	    }
+    }
 }
 echo "        </select>\n";
 echo "        <input type=\"submit\" value=\"OK\">\n";
