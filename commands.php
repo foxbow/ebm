@@ -5,7 +5,7 @@ error_reporting( E_ALL );
 if(!file_exists("settings.php")){
      require("header.php");
      echo "<h1>Configuration missing!</h2>\n";
-     echo "<p>Copy <b>config.ini</b> to <b>config.php</b>, set the desired database\n";
+     echo "<p>Copy <b>settings.ini</b> to <b>settings.php</b>, set the desired database\n";
      echo "and the needed parameters and try again.</p>\n";
      echo "<p>This has only to be done once. Even after an update the settings\n";
      echo "will be preserved.</p>\n";
