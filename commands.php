@@ -65,7 +65,7 @@ function db_exec( $SQL, $param=array() ){
  **/
 function db_initDB(){
     echo "<h1>Could not open db?!</h1>";
-return;
+//return;
     $cid = db_openDB();
 	$cid->beginTransaction();
     $res = $cid->exec( "CREATE TABLE users ( name VARCHAR(16) UNIQUE, password CHAR(32) );" );
