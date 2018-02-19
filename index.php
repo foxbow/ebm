@@ -151,12 +151,17 @@ if( ( $publicadd=="on" ) || ( $loguser != "PUBLIC" ) ) {
      }else{
           echo "  <td class='catlist' style='white-space:nowrap;' width='$percent%' valign='top'>\n";
      }
+
+    echo "    <a href=\"javascript:newcat=window.prompt('Create new category', 'CLT-xxxx');if(newcat!=null&&newcat!=''){window.location='$ebmurl/index.php?user=foxbow&cmd=newcat&category='+escape(newcat);}else{window.stop();}\"";
+    echo "title='Pull this Bookmarklet to your toolbar for quick adding of new categories'>*New*</a>";
+/*    
      echo "    <form action='$myname' method='post'>\n";
      echo "      <input type='hidden' name='user' value='$ebm_user'>\n";
      echo "      <input type='hidden' name='cmd' value='newcat'>\n";
      echo "      <input type='text' name='category'>\n";
      echo "      <input type='submit' value='*'>\n";
      echo "    </form>\n";
+*/
      if($left!=$rows){
           echo "  </td>\n";
      }else{
