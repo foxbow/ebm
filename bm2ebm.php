@@ -16,7 +16,7 @@ function parseline( $line, $key, $open, $close ){
 }
 
 $category="IMPORT";
-newCat( $category );
+newCat( $category, $ebm_user );
 $filename=$_FILES['bookmarks']['tmp_name'];
 $data=file($filename);
 $stack=array();
