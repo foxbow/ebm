@@ -6,7 +6,7 @@ Since Firefox does no longer support RSS based Live Bookmarks I recommend to ins
 [livemarks](https://addons.mozilla.org/firefox/addon/livemarks/) plugin. This also allows to import the OPML file created by firefox.
 
 ## Chrome
-Chrome does not support Live Bookmarks either. The foxish plugin worked around this issue but unfortunately became an agent that inserted ads into loaded pages. Even if thhis may no longer be the case, I stopped using it and relied on Firefox.
+Chrome does not support Live Bookmarks either. The foxish plugin worked around this issue but unfortunately became an agent that inserted ads into loaded pages. Even if this may no longer be the case, I stopped using it and relied on Firefox.
 
 ### Demo
 an example installation is planned..
